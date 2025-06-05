@@ -1,21 +1,21 @@
 #!/bin/bash
 set -e
 
-# Ensure all required packages are installed
+# ----- 1. Install dependencies -----
 sudo apt update
 sudo apt install -y curl git zsh ruby ruby-dev gcc make nala
 
-# Install colorls if not present
+# ----- 2. Install colorls -----
 if ! gem list -i colorls >/dev/null 2>&1; then
   sudo gem install colorls
 fi
 
-# Install fastfetch if not present
+# ----- 3. Install fastfetch -----
 if ! command -v fastfetch >/dev/null 2>&1; then
   curl -sSL https://alessandromrc.github.io/fastfetch-installer/installer.sh | sudo bash
 fi
 
-# Install Oh My Zsh if not present or incomplete
+# ----- 4. Install Oh My Zsh -----
 if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
   rm -rf "$HOME/.oh-my-zsh"
   RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -23,12 +23,12 @@ fi
 
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
-# Install Powerlevel10k theme if not present
+# ----- 5. Install Powerlevel10k theme -----
 if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
 fi
 
-# Install plugins if not present
+# ----- 6. Install plugins -----
 declare -A plugins
 plugins=(
   [zsh-autosuggestions]="https://github.com/zsh-users/zsh-autosuggestions"
@@ -42,11 +42,10 @@ for plugin in "${!plugins[@]}"; do
   fi
 done
 
-# Create Documents directory if it doesn't exist
-mkdir -p /home/stiannor/Documents
+# ----- 7. Create up.sh maintenance script -----
+mkdir -p "$HOME/Documents"
 
-# Create up.sh maintenance script
-cat <<'EOF' > /home/stiannor/Documents/up.sh
+cat <<'EOF' > "$HOME/Documents/up.sh"
 #!/bin/bash
 
 echo "Starting system update and maintenance..."
@@ -95,25 +94,36 @@ sudo updatedb
 echo "Update and maintenance process completed."
 EOF
 
-# Make up.sh executable
-chmod +x /home/stiannor/Documents/up.sh
+chmod +x "$HOME/Documents/up.sh"
+echo "up.sh maintenance script created at $HOME/Documents/up.sh"
 
-# Copy .zshrc and .p10k.zsh from repo if present
-if [ -f ./Homelab/.zshrc ]; then
-  cp ./Homelab/.zshrc ~/.zshrc
-  echo ".zshrc copied to home directory."
+# ----- 8. Copy .zshrc and .p10k.zsh from repo with error checking -----
+REPO_ZSHRC="$HOME/Homelab/.zshrc"
+DEST_ZSHRC="$HOME/.zshrc"
+REPO_P10K="$HOME/Homelab/.p10k.zsh"
+DEST_P10K="$HOME/.p10k.zsh"
+
+echo "Attempting to copy $REPO_ZSHRC to $DEST_ZSHRC"
+if [ -f "$REPO_ZSHRC" ]; then
+  cp "$REPO_ZSHRC" "$DEST_ZSHRC"
+  echo "SUCCESS: .zshrc copied to $DEST_ZSHRC"
+else
+  echo "ERROR: $REPO_ZSHRC not found. .zshrc was NOT copied."
+  ls -l "$HOME/Homelab"
+  exit 1
 fi
 
-if [ -f ./Homelab/.p10k.zsh ]; then
-  cp ./Homelab/.p10k.zsh ~/.p10k.zsh
-  echo ".p10k.zsh copied to home directory."
+if [ -f "$REPO_P10K" ]; then
+  cp "$REPO_P10K" "$DEST_P10K"
+  echo "SUCCESS: .p10k.zsh copied to $DEST_P10K"
+else
+  echo "No .p10k.zsh found in $HOME/Homelab. Skipping."
 fi
 
-# Change default shell to zsh if not already
+# ----- 9. Change default shell to zsh if not already -----
 if [ "$SHELL" != "$(which zsh)" ]; then
   chsh -s "$(which zsh)"
   echo "Default shell changed to zsh. Please log out and log in again for changes to take effect."
 fi
 
 echo "All Zsh plugins, Powerlevel10k, colorls, fastfetch, and up.sh are installed and configured!"
-
