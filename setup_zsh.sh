@@ -127,3 +127,6 @@ if [ "$SHELL" != "$(which zsh)" ]; then
 fi
 
 echo "All Zsh plugins, Powerlevel10k, colorls, fastfetch, and up.sh are installed and configured!"
+echo -e "${BOLD}${YELLOW}Refreshing your shell in 3 seconds...${NC}"
+sleep 3
+exec zsh
