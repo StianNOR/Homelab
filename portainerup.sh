@@ -78,8 +78,10 @@ install_docker() {
     esac
 
     sudo usermod -aG docker "$USER"
-    warn "Please log out and log back in, or run 'newgrp docker' to refresh group permissions."
-    exit 0
+    warn "A new shell is needed for Docker group permissions."
+    echo -e "${YELLOW}⏳ Waiting 3 seconds, then running 'newgrp docker'...${RESET}"
+    sleep 3
+    exec newgrp docker
 }
 
 # --- Main Logic ---
@@ -121,3 +123,12 @@ docker run -d \
   portainer/portainer-ce:latest
 
 success "Portainer is now installed and running!"
+
+# --- Display Portainer Dashboard Link ---
+IP=$(hostname -I | awk '{print $1}')
+if [ -z "$IP" ]; then
+    IP="localhost"
+fi
+
+echo -e "${BOLD}${CYAN}🌐 Access your Portainer dashboard at:${RESET} ${GREEN}https://$IP:9443${RESET}"
+echo -e "${YELLOW}Note: You may need to accept a self-signed certificate in your browser for HTTPS.${RESET}"
