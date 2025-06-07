@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -o pipefail
 
 # --- Colors and Formatting ---
 RED='\033[0;31m'
@@ -15,6 +16,14 @@ success() { echo -e "${GREEN}✅ $*${RESET}"; }
 warn()    { echo -e "${YELLOW}⚠️  $*${RESET}"; }
 error()   { echo -e "${RED}❌ $*${RESET}"; }
 step()    { echo -e "${BOLD}${BLUE}➤ $*${RESET}"; }
+
+# --- Global error trap for fail-safe ---
+trap '{
+  error "Script failed at line $LINENO. Last command: $BASH_COMMAND"
+  warn "Try running the failed command manually, or check your package manager and sudo configuration."
+  warn "If on Arch/Manjaro, check pacman locks and mirrors. If on Ubuntu/Debian, check apt sources and network."
+  exit 1
+}' ERR
 
 # ----- 1. Detect package manager -----
 step "Detecting package manager..."
@@ -41,7 +50,12 @@ elif command -v pacman >/dev/null 2>&1; then
     UPDATE="sudo pacman -Syu --noconfirm"
     INSTALL="sudo pacman -S --noconfirm"
     CLEAN="sudo pacman -Sc --noconfirm"
-    AUTOREMOVE="sudo pacman -Rns $(pacman -Qtdq) --noconfirm || true"
+    ORPHANS="$(pacman -Qtdq 2>/dev/null || true)"
+    if [[ -n "$ORPHANS" ]]; then
+        AUTOREMOVE="sudo pacman -Rns $ORPHANS --noconfirm"
+    else
+        AUTOREMOVE="echo 'No orphaned packages to remove.'"
+    fi
 elif command -v zypper >/dev/null 2>&1; then
     PM="zypper"
     UPDATE="sudo zypper refresh"
@@ -52,21 +66,38 @@ else
     error "No supported package manager found."
     exit 1
 fi
+success "Detected package manager: $PM"
 
 # ----- 2. Install dependencies -----
 step "Updating package lists and installing dependencies..."
-$UPDATE
-if [[ "$PM" == "pacman" ]]; then
-    $INSTALL curl git zsh ruby gcc make
-else
-    $INSTALL curl git zsh ruby ruby-devel gcc make || $INSTALL ruby ruby-dev gcc make
+if ! $UPDATE; then
+  error "Package manager update failed. Check your network, mirrors, and sudo permissions."
+  exit 1
 fi
+success "Package manager updated."
+
+if [[ "$PM" == "pacman" ]]; then
+    if ! $INSTALL curl git zsh ruby gcc make; then
+      error "Dependency install failed. Check pacman output."
+      exit 1
+    fi
+else
+    if ! $INSTALL curl git zsh ruby ruby-devel gcc make && ! $INSTALL ruby ruby-dev gcc make; then
+      error "Dependency install failed. Check package manager output."
+      exit 1
+    fi
+fi
+success "Dependencies installed."
 
 # ----- 3. Install colorls (user install, not sudo) -----
 step "Checking for colorls..."
 if ! gem list -i colorls >/dev/null 2>&1; then
     info "Installing colorls Ruby gem for your user..."
-    gem install --user-install colorls
+    if ! gem install --user-install colorls; then
+      error "colorls install failed. Check Ruby/gem output."
+      exit 1
+    fi
+    success "colorls installed."
 else
     success "colorls is already installed."
 fi
@@ -82,7 +113,11 @@ fi
 step "Checking for fastfetch..."
 if ! command -v fastfetch >/dev/null 2>&1; then
     info "Installing fastfetch..."
-    curl -sSL https://alessandromrc.github.io/fastfetch-installer/installer.sh | sudo bash
+    if ! curl -sSL https://alessandromrc.github.io/fastfetch-installer/installer.sh | sudo bash; then
+      error "fastfetch install failed."
+      exit 1
+    fi
+    success "fastfetch installed."
 else
     success "fastfetch is already installed."
 fi
@@ -92,7 +127,11 @@ step "Checking for Oh My Zsh..."
 if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
     info "Installing Oh My Zsh..."
     rm -rf "$HOME/.oh-my-zsh"
-    RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    if ! RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; then
+      error "Oh My Zsh install failed."
+      exit 1
+    fi
+    success "Oh My Zsh installed."
 else
     success "Oh My Zsh is already installed."
 fi
@@ -103,7 +142,11 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 step "Checking for Powerlevel10k theme..."
 if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
     info "Installing Powerlevel10k theme..."
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
+    if ! git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"; then
+      error "Powerlevel10k install failed."
+      exit 1
+    fi
+    success "Powerlevel10k installed."
 else
     success "Powerlevel10k theme is already installed."
 fi
@@ -120,7 +163,11 @@ plugins=(
 for plugin in "${!plugins[@]}"; do
   if [ ! -d "$ZSH_CUSTOM/plugins/$plugin" ]; then
     info "Installing plugin: $plugin"
-    git clone "${plugins[$plugin]}" "$ZSH_CUSTOM/plugins/$plugin"
+    if ! git clone "${plugins[$plugin]}" "$ZSH_CUSTOM/plugins/$plugin"; then
+      error "Plugin $plugin install failed."
+      exit 1
+    fi
+    success "Plugin $plugin installed."
   else
     success "Plugin $plugin is already installed."
   fi
@@ -135,8 +182,7 @@ if [ -f "$SCRIPT_DIR/up.sh" ]; then
     chmod +x "$HOME/Documents/up.sh"
     success "up.sh moved to $HOME/Documents and made executable."
 else
-    error "up.sh not found in $SCRIPT_DIR"
-    exit 1
+    warn "up.sh not found in $SCRIPT_DIR. Skipping."
 fi
 
 # ----- 9. Copy .zshrc and .p10k.zsh from repo with error checking -----
@@ -150,9 +196,8 @@ if [ -f "$REPO_ZSHRC" ]; then
   cp "$REPO_ZSHRC" "$DEST_ZSHRC"
   success ".zshrc copied to $DEST_ZSHRC"
 else
-  error "$REPO_ZSHRC not found. .zshrc was NOT copied."
+  warn "$REPO_ZSHRC not found. .zshrc was NOT copied."
   ls -l "$SCRIPT_DIR"
-  exit 1
 fi
 
 if [ -f "$REPO_P10K" ]; then
@@ -165,8 +210,11 @@ fi
 # ----- 10. Change default shell to zsh if not already -----
 step "Checking default shell..."
 if [ "$SHELL" != "$(which zsh)" ]; then
-  chsh -s "$(which zsh)"
-  info "Default shell changed to zsh. Please log out and log in again for changes to take effect."
+  if chsh -s "$(which zsh)"; then
+    info "Default shell changed to zsh. Please log out and log in again for changes to take effect."
+  else
+    warn "Could not change default shell. You may need to do it manually."
+  fi
 else
   success "zsh is already the default shell."
 fi
