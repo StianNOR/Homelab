@@ -1,33 +1,27 @@
-# Disable Powerlevel10k instant prompt
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
-
-autoload -Uz compinit
-compinit
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# ----- Powerlevel10k Instant Prompt (must be at the very top) -----
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-# Add Ruby gem path BEFORE Oh My Zsh initialization
-export PATH="$PATH:$HOME/.gem/ruby/3.3.0/bin"
+# ----- Add Ruby gem user bin directory to PATH (cross-distro) -----
+export PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
 
-# Path to your Oh My Zsh installation.
+# ----- Oh My Zsh and Theme -----
 export ZSH="$HOME/.oh-my-zsh"
-
-# Set name of the theme to load
 ZSH_THEME="powerlevel10k/powerlevel10k"
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Plugins
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions)
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  zsh-completions
+)
+
 source $ZSH/oh-my-zsh.sh
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
-# User configuration
-
-# Aliases - all home paths use $HOME for portability
+# ----- Aliases -----
 alias up="$HOME/Documents/up.sh"
 alias p10="p10k configure"
 alias fresh='source ~/.zshrc'
@@ -39,16 +33,17 @@ alias ll='colorls -l'
 alias la='colorls -a'
 #alias fix="mv ~/.zsh_history ~/.zsh_history_bad && strings ~/.zsh_history_bad > ~/.zsh_history && fc -R ~/.zsh_history && rm ~/.zsh_history_bad"
 
-# Welcome message
+# ----- Welcome Message and Info (after prompt initialization) -----
 echo "┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐"
 echo "|                                                 \x1b[32mWelcome Back $USER\x1b[0m                                                         |"
 echo "└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘"
 echo ""
-fastfetch
+command -v fastfetch >/dev/null && fastfetch
 echo ""
 echo "┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐"
 echo "|                                                 \x1b[32mEnjoy here is your HomeDir\x1b[0m                                                    |"
 echo "└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘"              
 echo " ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── "
-sls
+command -v colorls >/dev/null && sls
 echo " ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── "
+
