@@ -62,14 +62,20 @@ else
     $INSTALL curl git zsh ruby ruby-devel gcc make || $INSTALL ruby ruby-dev gcc make
 fi
 
-
-# ----- 3. Install colorls -----
+# ----- 3. Install colorls (user install, not sudo) -----
 step "Checking for colorls..."
 if ! gem list -i colorls >/dev/null 2>&1; then
-    info "Installing colorls Ruby gem..."
-    sudo gem install colorls
+    info "Installing colorls Ruby gem for your user..."
+    gem install --user-install colorls
 else
     success "colorls is already installed."
+fi
+
+# Add user gem bin dir to PATH in .zshrc if not present
+USER_GEM_BIN="$(ruby -e 'puts Gem.user_dir')/bin"
+if ! grep -q "$USER_GEM_BIN" "$HOME/.zshrc"; then
+  echo "export PATH=\"\$PATH:$USER_GEM_BIN\"" >> "$HOME/.zshrc"
+  info "Added $USER_GEM_BIN to your PATH in .zshrc"
 fi
 
 # ----- 4. Install fastfetch -----
