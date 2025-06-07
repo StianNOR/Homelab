@@ -56,7 +56,12 @@ fi
 # ----- 2. Install dependencies -----
 step "Updating package lists and installing dependencies..."
 $UPDATE
-$INSTALL curl git zsh ruby ruby-devel gcc make || $INSTALL ruby ruby-dev gcc make
+if [[ "$PM" == "pacman" ]]; then
+    $INSTALL curl git zsh ruby gcc make
+else
+    $INSTALL curl git zsh ruby ruby-devel gcc make || $INSTALL ruby ruby-dev gcc make
+fi
+
 
 # ----- 3. Install colorls -----
 step "Checking for colorls..."
