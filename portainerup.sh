@@ -48,15 +48,15 @@ install_docker() {
             sudo dnf install -y moby-engine docker-cli containerd docker-buildx docker-compose docker-compose-switch
             sudo systemctl enable --now docker
             ;;
-        centos|rhel|rocky)
+        centos|rhel|rocky|almalinux|ol|oracle)
             info "Adding Docker repository and installing Docker..."
             sudo yum install -y yum-utils
             sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
             sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
             sudo systemctl enable --now docker
             ;;
-        arch)
-            info "Installing Docker with pacman..."
+        arch|manjaro|endeavouros|garuda|artix|arcolinux|antergos|chakra|kaos)
+            info "Installing Docker with pacman (Arch-based)..."
             sudo pacman -Sy --noconfirm docker docker-compose
             sudo systemctl enable --now docker
             ;;
