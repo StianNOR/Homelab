@@ -122,7 +122,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # User configuration
-alias up="/home/stiannor/Documents/up.sh"
+alias up="/home/$USER/Documents/up.sh"
 alias p10="p10k configure"
 alias fresh='source ~/.zshrc'
 alias clear='clear && source ~/.zshrc'
