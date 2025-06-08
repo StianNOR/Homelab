@@ -89,8 +89,33 @@ else
 fi
 success "Dependencies installed."
 
-# ----- 3. Install colorls (user install, not sudo) -----
-step "Checking for colorls..."
+# ----- 3. Update RubyGems and all gems -----
+step "Updating RubyGems and all installed gems..."
+
+# On Debian/Ubuntu, gem system update is disabled by default for safety[2][5]
+if [[ "$PM" == "apt" ]]; then
+    warn "RubyGems system update is disabled on Debian/Ubuntu. Use apt to update rubygems if needed."
+else
+    if gem update --system; then
+        success "RubyGems system updated."
+    else
+        warn "RubyGems system update failed or is not supported on this distribution."
+    fi
+fi
+
+if gem update; then
+    success "All installed gems updated."
+else
+    warn "Gem update failed. Some gems may not have been updated."
+fi
+
+# ----- 4. Install colorls (user install, not sudo) -----
+step "Checking for colorls Ruby gem..."
+
+# Ensure RubyGems is in PATH for user gem install
+export GEM_HOME="$HOME/.gem"
+export PATH="$PATH:$GEM_HOME/bin"
+
 if ! gem list -i colorls >/dev/null 2>&1; then
     info "Installing colorls Ruby gem for your user..."
     if ! gem install --user-install colorls; then
@@ -109,7 +134,12 @@ if ! grep -q "$USER_GEM_BIN" "$HOME/.zshrc"; then
   info "Added $USER_GEM_BIN to your PATH in .zshrc"
 fi
 
-# ----- 4. Install fastfetch -----
+# Double-check colorls binary is available
+if ! command -v colorls >/dev/null 2>&1; then
+    warn "colorls binary not found in PATH. You may need to restart your shell or source your .zshrc."
+fi
+
+# ----- 5. Install fastfetch -----
 step "Checking for fastfetch..."
 if ! command -v fastfetch >/dev/null 2>&1; then
     info "Installing fastfetch..."
@@ -122,7 +152,7 @@ else
     success "fastfetch is already installed."
 fi
 
-# ----- 5. Install Oh My Zsh -----
+# ----- 6. Install Oh My Zsh -----
 step "Checking for Oh My Zsh..."
 if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
     info "Installing Oh My Zsh..."
@@ -138,7 +168,7 @@ fi
 
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
-# ----- 6. Install Powerlevel10k theme -----
+# ----- 7. Install Powerlevel10k theme -----
 step "Checking for Powerlevel10k theme..."
 if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
     info "Installing Powerlevel10k theme..."
@@ -151,7 +181,7 @@ else
     success "Powerlevel10k theme is already installed."
 fi
 
-# ----- 7. Install plugins -----
+# ----- 8. Install plugins -----
 step "Checking for Zsh plugins..."
 declare -A plugins
 plugins=(
@@ -173,7 +203,7 @@ for plugin in "${!plugins[@]}"; do
   fi
 done
 
-# ----- 8. Move up.sh to ~/Documents and set permissions -----
+# ----- 9. Move up.sh to ~/Documents and set permissions -----
 step "Setting up up.sh maintenance script..."
 mkdir -p "$HOME/Documents"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -185,7 +215,7 @@ else
     warn "up.sh not found in $SCRIPT_DIR. Skipping."
 fi
 
-# ----- 9. Copy .zshrc and .p10k.zsh from repo with error checking -----
+# ----- 10. Copy .zshrc and .p10k.zsh from repo with error checking -----
 step "Copying .zshrc and .p10k.zsh from repo..."
 REPO_ZSHRC="$SCRIPT_DIR/.zshrc"
 DEST_ZSHRC="$HOME/.zshrc"
@@ -207,7 +237,7 @@ else
   warn "No .p10k.zsh found in $SCRIPT_DIR. Skipping."
 fi
 
-# ----- 10. Change default shell to zsh if not already -----
+# ----- 11. Change default shell to zsh if not already -----
 step "Checking default shell..."
 if [ "$SHELL" != "$(which zsh)" ]; then
   if chsh -s "$(which zsh)"; then
