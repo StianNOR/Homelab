@@ -26,11 +26,11 @@ else
     exit 1
 fi
 
-# --- Install Docker ---
+# --- Install Docker and Docker Compose ---
 install_docker() {
     step "Installing Docker for ${BOLD}$DISTRO_ID $DISTRO_VERSION${RESET}..."
     case "$DISTRO_ID" in
-        ubuntu|debian)
+        ubuntu|debian|raspbian)
             info "Adding Docker repository and installing Docker..."
             sudo apt update
             sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
@@ -48,26 +48,26 @@ install_docker() {
             sudo dnf install -y moby-engine docker-cli containerd docker-buildx docker-compose docker-compose-switch
             sudo systemctl enable --now docker
             ;;
-        centos|rhel)
+        centos|rhel|rocky)
             info "Adding Docker repository and installing Docker..."
             sudo yum install -y yum-utils
             sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-            sudo yum install -y docker-ce docker-ce-cli containerd.io
+            sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
             sudo systemctl enable --now docker
             ;;
         arch)
             info "Installing Docker with pacman..."
-            sudo pacman -Sy --noconfirm docker
+            sudo pacman -Sy --noconfirm docker docker-compose
             sudo systemctl enable --now docker
             ;;
-        opensuse*|suse)
+        opensuse*|suse|sles)
             info "Installing Docker with zypper..."
-            sudo zypper install -y docker
+            sudo zypper install -y docker docker-compose
             sudo systemctl enable --now docker
             ;;
         alpine)
             info "Installing Docker with apk..."
-            sudo apk add --update docker
+            sudo apk add --update docker docker-compose
             sudo rc-update add docker boot
             sudo service docker start
             ;;
@@ -77,11 +77,14 @@ install_docker() {
             ;;
     esac
 
-    sudo usermod -aG docker "$USER"
-    warn "A new shell is needed for Docker group permissions."
-    echo -e "${YELLOW}⏳ Waiting 3 seconds, then running 'newgrp docker'...${RESET}"
-    sleep 3
-    exec newgrp docker
+    # Add user to docker group if not already
+    if ! groups "$USER" | grep -qw docker; then
+        sudo usermod -aG docker "$USER"
+        warn "A new shell is needed for Docker group permissions."
+        echo -e "${YELLOW}⏳ Waiting 3 seconds, then running 'newgrp docker'...${RESET}"
+        sleep 3
+        exec newgrp docker
+    fi
 }
 
 # --- Main Logic ---
@@ -93,10 +96,18 @@ else
     success "Docker is already installed."
 fi
 
+step "Checking for Docker Compose plugin..."
+if ! docker compose version &>/dev/null; then
+    warn "Docker Compose plugin not found. Attempting to install..."
+    install_docker
+else
+    success "Docker Compose is already installed."
+fi
+
 step "Ensuring Docker service is running..."
-if ! sudo systemctl is-active --quiet docker 2>/dev/null; then
+if ! (sudo systemctl is-active --quiet docker 2>/dev/null || sudo service docker status 2>/dev/null | grep -q running); then
     info "Starting Docker service..."
-    sudo systemctl start docker || sudo service docker start || true
+    sudo systemctl start docker 2>/dev/null || sudo service docker start || true
 else
     success "Docker service is running."
 fi
@@ -125,7 +136,7 @@ docker run -d \
 success "Portainer is now installed and running!"
 
 # --- Display Portainer Dashboard Link ---
-IP=$(hostname -I | awk '{print $1}')
+IP=$(hostname -I 2>/dev/null | awk '{print $1}')
 if [ -z "$IP" ]; then
     IP="localhost"
 fi
