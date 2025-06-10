@@ -126,6 +126,7 @@ docker pull portainer/portainer-ce:latest
 
 step "Starting Portainer container..."
 docker run -d \
+  --security-opt label=disable \
   -p 8000:8000 -p 9443:9443 \
   --name portainer \
   --restart=always \
