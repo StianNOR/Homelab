@@ -1,5 +1,6 @@
 # ─── Ensure Ruby Gem Binaries Are in PATH ──────────────────────────────
 # Handles all Ruby versions for user-installed gems like colorls
+setopt nullglob
 for dir in "$HOME/.gem/ruby/"*/bin ; do
   [[ -d $dir ]] && PATH="$PATH:$dir"
 done
