@@ -42,6 +42,7 @@ alias up="/home/$USER/Documents/up.sh"
 alias p10="p10k configure"
 alias fresh='source ~/.zshrc'
 alias clear='clear && source ~/.zshrc'
+alias portainerup='bash /home/$USER/Homelab/portainerup.sh'
 #alias fix="mv ~/.zsh_history ~/.zsh_history_bad && strings ~/.zsh_history_bad > ~/.zsh_history && fc -R ~/.zsh_history && rm ~/.zsh_history_bad"
 
 # ─── Welcome Message and HomeDir Listing ──────────────────────────────
