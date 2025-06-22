@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-set -o pipefail
+set -o pipefail # Ensures script exits on any command failure in a pipeline
 
 # --- Colors and Formatting ---
 RED='\033[0;31m'
@@ -55,7 +55,7 @@ elif command -v pacman >/dev/null 2>&1; then
         AUTOREMOVE="sudo pacman -Rns $ORPHANS --noconfirm"
     else
         AUTOREMOVE="echo 'No orphaned packages to remove.'"
-    fi
+    fi # <--- Corrected 'fi'
 elif command -v zypper >/dev/null 2>&1; then
     PM="zypper"
     UPDATE="sudo zypper refresh"
@@ -67,8 +67,7 @@ elif command -v apk >/dev/null 2>&1; then # Added for Alpine Linux
     UPDATE="sudo apk update"
     INSTALL="sudo apk add" # apk doesn't typically need -y, it prompts.
     CLEAN="sudo apk cache clean"
-    # apk's 'autoremove' equivalent is implicitly handled by 'apk del'
-    AUTOREMOVE="echo 'apk handles autoremove implicitly when packages are removed.'"
+    AUTOREMOVE="echo 'apk handles autoremove implicitly when packages are removed.'" # No direct autoremove
 else
     error "No supported package manager found."
     exit 1
@@ -83,16 +82,34 @@ if ! $UPDATE; then
 fi
 success "Package manager updated."
 
-# Install dependencies based on PM
-DEPENDENCIES="curl git zsh ruby ruby-dev gcc make" # Common dependencies
-# Adjust dependencies for specific package managers
+# Common dependencies for Ruby/Zsh development
+CORE_DEPENDENCIES="curl git zsh ruby gcc make"
+RUBY_DEV_PACKAGE="" # Will be set conditionally
+BUILD_TOOLS_PACKAGE="" # Will be set conditionally
+
+# Adjust dependencies for specific package managers and systems
 if [[ "$PM" == "pacman" ]]; then
-    DEPENDENCIES="curl git zsh ruby gcc make" # pacman doesn't use ruby-dev
-elif [[ "$PM" == "apk" ]]; then # Adjust for apk (Alpine) package names
-    DEPENDENCIES="curl git zsh ruby ruby-dev gcc make automake" # Alpine often needs ruby-dev and automake for ruby gems with native extensions
+    # Arch doesn't use ruby-dev; gcc, make are standalone
+    REQUIRED_DEPENDENCIES="$CORE_DEPENDENCIES"
+elif [[ "$PM" == "apk" ]]; then
+    # Alpine specific: ruby-dev provides headers for Ruby gems,
+    # libc-dev provides general C headers (like locale.h),
+    # build-base provides standard build tools (compiler, make, etc.)
+    RUBY_DEV_PACKAGE="ruby-dev"
+    BUILD_TOOLS_PACKAGE="libc-dev build-base" # Important for building native Ruby gems
+    REQUIRED_DEPENDENCIES="$CORE_DEPENDENCIES $RUBY_DEV_PACKAGE $BUILD_TOOLS_PACKAGE"
+else
+    # Default for deb/rpm based systems
+    if [[ "$PM" == "dnf" || "$PM" == "yum" ]]; then
+        RUBY_DEV_PACKAGE="ruby-devel" # RPM-based distros use ruby-devel
+    else # apt, zypper
+        RUBY_DEV_PACKAGE="ruby-dev"
+    fi
+    REQUIRED_DEPENDENCIES="$CORE_DEPENDENCIES $RUBY_DEV_PACKAGE"
 fi
 
-if ! $INSTALL $DEPENDENCIES; then
+info "Attempting to install: $REQUIRED_DEPENDENCIES"
+if ! $INSTALL $REQUIRED_DEPENDENCIES; then
   error "Dependency install failed. Check package manager output."
   exit 1
 fi
@@ -101,7 +118,7 @@ success "Dependencies installed."
 # ----- 3. Update RubyGems and all gems -----
 step "Updating RubyGems and all installed gems..."
 
-# On Debian/Ubuntu, gem system update is disabled by default for safety[2][5]
+# On Debian/Ubuntu, gem system update is disabled by default for safety
 if [[ "$PM" == "apt" ]]; then
     warn "RubyGems system update is disabled on Debian/Ubuntu. Use apt to update rubygems if needed."
 elif [[ "$PM" == "apk" ]]; then
@@ -130,7 +147,7 @@ export PATH="$PATH:$GEM_HOME/bin"
 if ! gem list -i colorls >/dev/null 2>&1; then
     info "Installing colorls Ruby gem for your user..."
     if ! gem install --user-install colorls; then
-      error "colorls install failed. Check Ruby/gem output."
+      error "colorls install failed. Check Ruby/gem output. Ensure you have necessary build tools (gcc, make, ruby-dev/devel, libc-dev for Alpine)."
       exit 1
     fi
     success "colorls installed."
@@ -140,6 +157,11 @@ fi
 
 # Add user gem bin dir to PATH in .zshrc if not present
 USER_GEM_BIN="$(ruby -e 'puts Gem.user_dir')/bin"
+# Create .zshrc if it doesn't exist to prevent grep error
+if [ ! -f "$HOME/.zshrc" ]; then
+    touch "$HOME/.zshrc"
+    info "Created empty .zshrc file."
+fi
 if ! grep -q "$USER_GEM_BIN" "$HOME/.zshrc"; then
   echo "export PATH=\"\$PATH:$USER_GEM_BIN\"" >> "$HOME/.zshrc"
   info "Added $USER_GEM_BIN to your PATH in .zshrc"
@@ -171,10 +193,11 @@ step "Checking for Oh My Zsh..."
 if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
     info "Installing Oh My Zsh..."
     rm -rf "$HOME/.oh-my-zsh"
+    # Corrected: changed 'Cfi' to 'fi'
     if ! RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; then
       error "Oh My Zsh install failed."
       exit 1
-    fi
+    fi # <-- Corrected closing 'fi'
     success "Oh My Zsh installed."
 else
     success "Oh My Zsh is already installed."
