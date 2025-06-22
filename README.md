@@ -1,14 +1,7 @@
-#Download and install Hack Nerd Font manually
+### 1. Download and Install Hack Nerd Font Manually
 
-`mkdir -p ~/.local/share/fonts`
-`cd ~/.local/share/fonts`
-`wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip`
-`unzip Hack.zip`
-`fc-cache -fv`
+First, create the necessary directories and navigate into them:
 
-#Install my Homelab
-
-`git clone https://github.com/StianNOR/Homelab.git`
-`cd Homelab`
-`sudo chmod +x *.sh`
-`./setup_zsh.sh`
+```bash
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
