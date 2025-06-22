@@ -80,10 +80,13 @@ install_docker() {
     # Add user to docker group if not already
     if ! groups "$USER" | grep -qw docker; then
         sudo usermod -aG docker "$USER"
-        warn "A new shell is needed for Docker group permissions."
-        echo -e "${YELLOW}⏳ Waiting 3 seconds, then running 'newgrp docker'...${RESET}"
-        sleep 3
-        exec newgrp docker
+        warn "User '$USER' has been added to the 'docker' group."
+        error "IMPORTANT: Docker group permissions will NOT be active in this current session."
+        error "Please LOG OUT completely and LOG BACK IN (or open a NEW SSH/terminal session)."
+        error "After re-logging in, please re-run this script: ./portainerup"
+        exit 1 # Exit immediately, user must re-login and re-run
+    else
+        success "User '$USER' is already in the 'docker' group."
     fi
 }
 
@@ -91,28 +94,57 @@ install_docker() {
 step "Checking for Docker..."
 if ! command -v docker &>/dev/null; then
     warn "Docker not found. Starting installation..."
-    install_docker
+    install_docker # This call will install Docker and potentially exit if user added to group
 else
     success "Docker is already installed."
 fi
 
+# IMPORTANT: Re-check permissions here. If the script continued due to newgrp not working,
+# or if it was run by a user who was just added to docker group but didn't re-login,
+# this will catch it.
+step "Verifying Docker daemon access permissions for current user..."
+if ! docker info &>/dev/null; then
+    error "Permission denied: Cannot connect to Docker daemon."
+    error "Your user ('$USER') does not have correct permissions for Docker in this session."
+    error "If you were previously told to log out, please do so and then log back in, then re-run this script."
+    exit 1 # Exit, user must re-login and re-run for permissions to apply
+else
+    success "Docker daemon is accessible with current user permissions."
+fi
+
 step "Checking for Docker Compose plugin..."
-if ! docker compose version &>/dev/null; then
-    warn "Docker Compose plugin not found. Attempting to install..."
-    install_docker
+# On Alpine, 'docker-compose' is a separate binary, not a 'docker compose' subcommand.
+# This check works for both if 'docker-compose' is in PATH.
+if ! docker compose version &>/dev/null && ! command -v docker-compose &>/dev/null; then
+    warn "Docker Compose (or plugin) not found. Attempting to install..."
+    # Call install_docker again to ensure docker-compose is installed
+    # This might seem redundant if docker is already installed, but ensures
+    # the docker-compose part for new systems that might have docker but not compose.
+    install_docker # This will install Docker Compose components, but might also re-trigger the group message if somehow missed.
 else
     success "Docker Compose is already installed."
 fi
 
 step "Ensuring Docker service is running..."
-if ! (sudo systemctl is-active --quiet docker 2>/dev/null || sudo service docker status 2>/dev/null | grep -q running); then
-    info "Starting Docker service..."
-    sudo systemctl start docker 2>/dev/null || sudo service docker start || true
+# Alpine uses 'service' for OpenRC. Other distros use 'systemctl'.
+if [[ "$DISTRO_ID" == "alpine" ]]; then
+    if ! sudo service docker status 2>/dev/null | grep -q 'status: started'; then
+        info "Starting Docker service..."
+        sudo service docker start || true
+    else
+        success "Docker service is running."
+    fi
 else
-    success "Docker service is running."
+    if ! sudo systemctl is-active --quiet docker; then
+        info "Starting Docker service..."
+        sudo systemctl start docker || true
+    else
+        success "Docker service is running."
+    fi
 fi
 
 step "Checking for existing Portainer container..."
+# This command requires Docker permissions
 if docker ps -a --format '{{.Names}}' | grep -q "^portainer$"; then
     warn "Stopping and removing existing Portainer container..."
     docker stop portainer || true
@@ -126,6 +158,9 @@ docker pull portainer/portainer-ce:latest
 
 step "Starting Portainer container..."
 
+# Fedora often uses SELinux, which can interfere with Docker's default bind mounts
+# --privileged is sometimes a workaround, but a better solution would be to adjust SELinux policies.
+# For simplicity in this script, we keep the --privileged flag for Fedora.
 if [[ "$DISTRO_ID" == "fedora" ]]; then
   docker run -d \
     --privileged \
