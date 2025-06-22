@@ -62,6 +62,13 @@ elif command -v zypper >/dev/null 2>&1; then
     INSTALL="sudo zypper install -y"
     CLEAN="sudo zypper clean"
     AUTOREMOVE="sudo zypper rm -u"
+elif command -v apk >/dev/null 2>&1; then # Added for Alpine Linux
+    PM="apk"
+    UPDATE="sudo apk update"
+    INSTALL="sudo apk add" # apk doesn't typically need -y, it prompts.
+    CLEAN="sudo apk cache clean"
+    # apk's 'autoremove' equivalent is implicitly handled by 'apk del'
+    AUTOREMOVE="echo 'apk handles autoremove implicitly when packages are removed.'"
 else
     error "No supported package manager found."
     exit 1
@@ -76,16 +83,18 @@ if ! $UPDATE; then
 fi
 success "Package manager updated."
 
+# Install dependencies based on PM
+DEPENDENCIES="curl git zsh ruby ruby-dev gcc make" # Common dependencies
+# Adjust dependencies for specific package managers
 if [[ "$PM" == "pacman" ]]; then
-    if ! $INSTALL curl git zsh ruby gcc make; then
-      error "Dependency install failed. Check pacman output."
-      exit 1
-    fi
-else
-    if ! $INSTALL curl git zsh ruby ruby-devel gcc make && ! $INSTALL ruby ruby-dev gcc make; then
-      error "Dependency install failed. Check package manager output."
-      exit 1
-    fi
+    DEPENDENCIES="curl git zsh ruby gcc make" # pacman doesn't use ruby-dev
+elif [[ "$PM" == "apk" ]]; then # Adjust for apk (Alpine) package names
+    DEPENDENCIES="curl git zsh ruby ruby-dev gcc make automake" # Alpine often needs ruby-dev and automake for ruby gems with native extensions
+fi
+
+if ! $INSTALL $DEPENDENCIES; then
+  error "Dependency install failed. Check package manager output."
+  exit 1
 fi
 success "Dependencies installed."
 
@@ -95,6 +104,8 @@ step "Updating RubyGems and all installed gems..."
 # On Debian/Ubuntu, gem system update is disabled by default for safety[2][5]
 if [[ "$PM" == "apt" ]]; then
     warn "RubyGems system update is disabled on Debian/Ubuntu. Use apt to update rubygems if needed."
+elif [[ "$PM" == "apk" ]]; then
+    warn "RubyGems system update is often handled by 'apk upgrade ruby'. Skipping 'gem update --system'."
 else
     if gem update --system; then
         success "RubyGems system updated."
@@ -143,6 +154,9 @@ fi
 step "Checking for fastfetch..."
 if ! command -v fastfetch >/dev/null 2>&1; then
     info "Installing fastfetch..."
+    # The fastfetch installer script has its own package manager detection, which is good.
+    # It might use dnf/apt/etc. or directly curl for pre-built binaries.
+    # We don't need to specify PM here, as the installer handles it.
     if ! curl -sSL https://alessandromrc.github.io/fastfetch-installer/installer.sh | sudo bash; then
       error "fastfetch install failed."
       exit 1
