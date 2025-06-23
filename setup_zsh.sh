@@ -135,8 +135,7 @@ else
 fi
 success "Detected package manager: ${BOLD}$PM${RESET}"
 
----
-## 3. Install Dependencies
+# ----- 3. Install Dependencies -----
 
 step "Updating package lists and installing dependencies..."
 if ! $UPDATE; then
@@ -178,8 +177,7 @@ if ! $INSTALL $REQUIRED_DEPENDENCIES; then
 fi
 success "Dependencies installed."
 
----
-## 4. Update RubyGems and all gems
+# ----- 4. Update RubyGems and all gems -----
 
 step "Updating RubyGems and all installed gems..."
 
@@ -203,8 +201,7 @@ else
     warn "Gem update failed. Some gems may not have been updated. Continuing anyway."
 fi
 
----
-## 5. Install colorls (user install, not sudo)
+# ----- 5. Install colorls (user install, not sudo) -----
 
 step "Checking for colorls Ruby gem..."
 
@@ -229,7 +226,7 @@ if [ ! -d "$USER_GEM_BIN" ]; then
     warn "$USER_GEM_BIN does not exist. This might indicate an issue with RubyGems setup."
 fi
 
-# We'll handle .zshrc modification in a later step when copying the template.
+# We'll handle .zshrc modification in a later step when copying the main dotfile.
 # For now, ensure the current shell session has it.
 info "Ensuring $USER_GEM_BIN is in current session PATH."
 PATH="$PATH:$USER_GEM_BIN"
@@ -239,8 +236,7 @@ if ! command -v colorls >/dev/null 2>&1; then
     warn "colorls binary still not found in current PATH. You may need to restart your shell or source your .zshrc."
 fi
 
----
-## 6. Install fastfetch
+# ----- 6. Install fastfetch -----
 
 step "Checking for fastfetch..."
 if ! command -v fastfetch >/dev/null 2>&1; then
@@ -252,8 +248,7 @@ else
     success "fastfetch is already installed."
 fi
 
----
-## 7. Install Oh My Zsh
+# ----- 7. Install Oh My Zsh -----
 
 step "Checking for Oh My Zsh..."
 if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
@@ -261,7 +256,8 @@ if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
         info "Installing Oh My Zsh..."
         rm -rf "$HOME/.oh-my-zsh" # Clean up any failed/partial installs
         # Use a more robust temporary file for the installer
-        local omz_installer=$(mktemp)
+        local omz_installer
+        omz_installer=$(mktemp) # Removed 'local' from the assignment to fix potential syntax issue on some shells
         if ! curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o "$omz_installer"; then
             error "Failed to download Oh My Zsh installer."
             rm -f "$omz_installer"
@@ -287,8 +283,7 @@ fi
 
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
----
-## 8. Install Powerlevel10k theme
+# ----- 8. Install Powerlevel10k theme -----
 
 step "Checking for Powerlevel10k theme..."
 if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
@@ -302,8 +297,7 @@ else
     success "Powerlevel10k theme is already installed."
 fi
 
----
-## 9. Install Zsh plugins
+# ----- 9. Install Zsh plugins -----
 
 step "Checking for Zsh plugins..."
 for plugin_name in "${!ZSH_PLUGINS[@]}"; do
@@ -322,8 +316,7 @@ for plugin_name in "${!ZSH_PLUGINS[@]}"; do
   fi
 done
 
----
-## 10. Set up up.sh maintenance script
+# ----- 10. Set up up.sh maintenance script -----
 
 step "Setting up up.sh maintenance script..."
 mkdir -p "$HOME/Documents"
@@ -340,8 +333,7 @@ else
     warn "up.sh not found in $SCRIPT_DIR. Skipping."
 fi
 
----
-## 11. Copy .zshrc and .p10k.zsh from repo
+# ----- 11. Copy .zshrc and .p10k.zsh from repo -----
 
 step "Copying .zshrc and .p10k.zsh from repo..."
 REPO_ZSHRC="$SCRIPT_DIR/.zshrc"
@@ -364,8 +356,10 @@ if [ -f "$REPO_ZSHRC" ]; then
   cp "$REPO_ZSHRC" "$DEST_ZSHRC"
   success ".zshrc copied to $DEST_ZSHRC"
   # Append colorls path to .zshrc if not already there, after copying the main file
-  if ! grep -q "$USER_GEM_BIN" "$DEST_ZSHRC"; then
-    echo "export PATH=\"\$PATH:$USER_GEM_BIN\"" >> "$DEST_ZSHRC"
+  local user_gem_bin_path # Declaring local here
+  user_gem_bin_path="$(ruby -e 'puts Gem.user_dir')/bin"
+  if ! grep -q "$user_gem_bin_path" "$DEST_ZSHRC"; then
+    echo "export PATH=\"\$PATH:$user_gem_bin_path\"" >> "$DEST_ZSHRC"
     info "Added \$GEM_HOME/bin to your PATH in .zshrc for colorls."
   else
     info "\$GEM_HOME/bin already present in .zshrc."
@@ -389,8 +383,7 @@ else
   warn "No .p10k.zsh found in $SCRIPT_DIR. Skipping. You may need to run p10k configure manually."
 fi
 
----
-## 12. Change default shell to zsh
+# ----- 12. Change default shell to zsh -----
 
 step "Checking default shell..."
 if [ "$SHELL" != "$(which zsh)" ]; then
@@ -407,16 +400,9 @@ else
     success "zsh is already the default shell."
 fi
 
----
-## 13. Finalization
+# ----- 13. Finalization -----
 
 echo -e "${GREEN}${BOLD}
 🎉 All Zsh components, Powerlevel10k, colorls, fastfetch, and up.sh are installed and configured! 🎉
 ${RESET}"
 echo -e "${CYAN}To fully apply changes, please log out and log back in, or run 'exec zsh'.${RESET}"
-
-# Instead of blindly executing zsh, inform the user.
-# If they are in an interactive session, they can do it themselves.
-# If the script is run non-interactively, `exec zsh` might hang.
-# `exec zsh` is commented out to allow for a clean script exit.
-# exec zsh
