@@ -6,6 +6,16 @@ for dir in "$HOME/.gem/ruby/"*/bin ; do
 done
 export PATH
 
+#Root
+sudo() {
+  if [[ "$1" == "nano" ]]; then
+    TERM=xterm command sudo nano "${@:2}"
+  else
+    command sudo "$@"
+  fi
+}
+
+
 # ─── Powerlevel10k Instant Prompt (Should stay close to the top) ───────
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 autoload -Uz compinit
@@ -38,11 +48,18 @@ else
 fi
 
 # ─── User Aliases and Functions ───────────────────────────────────────
-alias up="/home/$USER/Documents/up.sh"
+alias up="/home/$USER/Documents/scripts/ups.sh"
+alias pup="/home/$USER/Documents/scripts/portainerup.sh"
 alias p10="p10k configure"
 alias fresh='source ~/.zshrc'
 alias clear='clear && source ~/.zshrc'
 alias portainerup='bash /home/$USER/Homelab/portainerup.sh'
+alias clamful='/home/stiannor/Documents/scripts/clamav_fullscan.sh'
+alias clamhome='/home/stiannor/Documents/scripts/clamav_home.sh'
+alias nano='TERM=xterm nano'
+alias bdisc='betterdiscordctl --d-install flatpak install'
+alias yay='yay --noconfirm'
+alias ali='grep '^alias' ~/.zshrc'
 #alias fix="mv ~/.zsh_history ~/.zsh_history_bad && strings ~/.zsh_history_bad > ~/.zsh_history && fc -R ~/.zsh_history && rm ~/.zsh_history_bad"
 
 # ─── Welcome Message and HomeDir Listing ──────────────────────────────
@@ -70,3 +87,12 @@ echo " ────────────────────────�
 # zstyle ':omz:update' frequency 13
 
 # End of .zshrc
+export EDITOR="nano"
+export VISUAL="nano"
+
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /home/stiannor/.dart-cli-completion/zsh-config.zsh ]] && . /home/stiannor/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
+
