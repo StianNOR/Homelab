@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "Starting now!                                    " # Clear the line and add a final message
+
+# --- End Countdown ---
+
 echo "Starting system update and maintenance..."
 
 # Detect package manager
