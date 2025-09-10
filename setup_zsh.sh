@@ -75,7 +75,6 @@ if ! $UPDATE; then
   exit 1
 fi
 success "Package manager updated."
-
 if [[ "$PM" == "pacman" ]]; then
     if ! $INSTALL curl git zsh ruby gcc make; then
       error "Dependency install failed. Check pacman output."
@@ -91,8 +90,6 @@ success "Dependencies installed."
 
 # ----- 3. Update RubyGems and all gems -----
 step "Updating RubyGems and all installed gems..."
-
-# On Debian/Ubuntu, gem system update is disabled by default for safety[2][5]
 if [[ "$PM" == "apt" ]]; then
     warn "RubyGems system update is disabled on Debian/Ubuntu. Use apt to update rubygems if needed."
 else
@@ -102,7 +99,6 @@ else
         warn "RubyGems system update failed or is not supported on this distribution."
     fi
 fi
-
 if gem update; then
     success "All installed gems updated."
 else
@@ -111,11 +107,8 @@ fi
 
 # ----- 4. Install colorls (user install, not sudo) -----
 step "Checking for colorls Ruby gem..."
-
-# Ensure RubyGems is in PATH for user gem install
 export GEM_HOME="$HOME/.gem"
 export PATH="$PATH:$GEM_HOME/bin"
-
 if ! gem list -i colorls >/dev/null 2>&1; then
     info "Installing colorls Ruby gem for your user..."
     if ! gem install --user-install colorls; then
@@ -126,15 +119,11 @@ if ! gem list -i colorls >/dev/null 2>&1; then
 else
     success "colorls is already installed."
 fi
-
-# Add user gem bin dir to PATH in .zshrc if not present
 USER_GEM_BIN="$(ruby -e 'puts Gem.user_dir')/bin"
 if ! grep -q "$USER_GEM_BIN" "$HOME/.zshrc"; then
   echo "export PATH=\"\$PATH:$USER_GEM_BIN\"" >> "$HOME/.zshrc"
   info "Added $USER_GEM_BIN to your PATH in .zshrc"
 fi
-
-# Double-check colorls binary is available
 if ! command -v colorls >/dev/null 2>&1; then
     warn "colorls binary not found in PATH. You may need to restart your shell or source your .zshrc."
 fi
@@ -165,7 +154,6 @@ if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
 else
     success "Oh My Zsh is already installed."
 fi
-
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
 # ----- 7. Install Powerlevel10k theme -----
@@ -189,7 +177,6 @@ plugins=(
   [zsh-syntax-highlighting]="https://github.com/zsh-users/zsh-syntax-highlighting"
   [zsh-completions]="https://github.com/zsh-users/zsh-completions"
 )
-
 for plugin in "${!plugins[@]}"; do
   if [ ! -d "$ZSH_CUSTOM/plugins/$plugin" ]; then
     info "Installing plugin: $plugin"
@@ -203,14 +190,14 @@ for plugin in "${!plugins[@]}"; do
   fi
 done
 
-# ----- 9. Move up.sh to ~/Documents and set permissions -----
+# ----- 9. Move up.sh to ~/Homelab and set permissions -----
 step "Setting up up.sh maintenance script..."
-mkdir -p "$HOME/Documents"
+mkdir -p "$HOME/Homelab"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$SCRIPT_DIR/up.sh" ]; then
-    mv "$SCRIPT_DIR/up.sh" "$HOME/Documents/up.sh"
-    chmod +x "$HOME/Documents/up.sh"
-    success "up.sh moved to $HOME/Documents and made executable."
+    mv "$SCRIPT_DIR/up.sh" "$HOME/Homelab/up.sh"
+    chmod +x "$HOME/Homelab/up.sh"
+    success "up.sh moved to $HOME/Homelab and made executable."
 else
     warn "up.sh not found in $SCRIPT_DIR. Skipping."
 fi
@@ -221,7 +208,6 @@ REPO_ZSHRC="$SCRIPT_DIR/.zshrc"
 DEST_ZSHRC="$HOME/.zshrc"
 REPO_P10K="$SCRIPT_DIR/.p10k.zsh"
 DEST_P10K="$HOME/.p10k.zsh"
-
 if [ -f "$REPO_ZSHRC" ]; then
   cp "$REPO_ZSHRC" "$DEST_ZSHRC"
   success ".zshrc copied to $DEST_ZSHRC"
@@ -229,7 +215,6 @@ else
   warn "$REPO_ZSHRC not found. .zshrc was NOT copied."
   ls -l "$SCRIPT_DIR"
 fi
-
 if [ -f "$REPO_P10K" ]; then
   cp "$REPO_P10K" "$DEST_P10K"
   success ".p10k.zsh copied to $DEST_P10K"
@@ -252,6 +237,7 @@ fi
 echo -e "${GREEN}${BOLD}
 🎉 All Zsh plugins, Powerlevel10k, colorls, fastfetch, and up.sh are installed and configured! 🎉
 ${RESET}"
+echo -e "${CYAN}The up.sh script is now located in: ~/Homelab/up.sh${RESET}"
 echo -e "${CYAN}Refreshing your shell in 3 seconds...${RESET}"
 sleep 3
 exec zsh
