@@ -48,19 +48,14 @@ else
 fi
 
 # ─── User Aliases and Functions ───────────────────────────────────────
-alias up="/home/$USER/Documents/scripts/ups.sh"
-alias pup="/home/$USER/Documents/scripts/portainerup.sh"
+alias up="/home/$USER/Homelab/ps.sh"
+alias pup="/home/$USER/Homelab/portainerup.sh"
 alias p10="p10k configure"
 alias fresh='source ~/.zshrc'
 alias clear='clear && source ~/.zshrc'
 alias portainerup='bash /home/$USER/Homelab/portainerup.sh'
-alias clamful='/home/stiannor/Documents/scripts/clamav_fullscan.sh'
-alias clamhome='/home/stiannor/Documents/scripts/clamav_home.sh'
 alias nano='TERM=xterm nano'
-alias bdisc='betterdiscordctl --d-install flatpak install'
-alias yay='yay --noconfirm'
 alias ali='grep '^alias' ~/.zshrc'
-#alias fix="mv ~/.zsh_history ~/.zsh_history_bad && strings ~/.zsh_history_bad > ~/.zsh_history && fc -R ~/.zsh_history && rm ~/.zsh_history_bad"
 
 # ─── Welcome Message and HomeDir Listing ──────────────────────────────
 echo "┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐"
