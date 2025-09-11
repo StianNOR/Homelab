@@ -58,11 +58,11 @@ curl https://keybase.io/sarttech7/pgp_keys.asc | gpg --import
 ```
 ### Then verify each file whit command below:
 ```
-gpg verify signatures/setup_zsh.sh.asc -i setup_zsh.sh
-gpg verify signatures/up.sh.asc -i up.sh
-gpg verify signatures/portainerup.sh.asc -i portainerup.sh
-gpg verify signatures/portainer_docker_uninstall.sh.asc -i portainer_docker_uninstall.sh
-gpg verify signatures/uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
+gpg --verify signatures/setup_zsh.sh.asc -i setup_zsh.sh
+gpg --verify signatures/up.sh.asc -i up.sh
+gpg --verify signatures/portainerup.sh.asc -i portainerup.sh
+gpg --verify signatures/portainer_docker_uninstall.sh.asc -i portainer_docker_uninstall.sh
+gpg --verify signatures/uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
 ```
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 <br><br>
