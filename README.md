@@ -10,8 +10,7 @@
 | YUM     | CentOS 7, older RHEL versions, Oracle Linux, etc  |
 | Pacman  | Arch Linux, Manjaro, EndeavourOS, Artix Linux, etc      |
 | Zypper  | openSUSE, SUSE, etc     |
-
-<br>
+<br><br>
 #### 1. Download and Install Hack Nerd Font Manually.
 These commands will create the necessary font directories, navigate into them, download the font, unzip it, and refresh your font cache.
 (NerdFont will make it look much nicer and add allot of used symboles.)
