@@ -1,4 +1,4 @@
-## Welcome to My Script to Make Your Terminal Life Easier on Linux. :sparkles:
+## Simplify and beautify your Linux terminal experience with this handy script. :sparkles:
 <br><br>
 
 ### The script supports Linux distros using these package managers: ✅
