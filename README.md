@@ -70,3 +70,9 @@ ali
 # la      | ls -a / ls -la | List all files, including hidden files
 # sls     | ls -ls         | List with file sizes and details
 
+
+
+Make dir for Nerd Font install
+cd ~ # Ensure you are in your home directory
+mkdir -p .local/share/fonts
+cd .local/share/fonts
