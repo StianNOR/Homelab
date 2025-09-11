@@ -45,6 +45,7 @@ ali
 
 #### 6. Changes to ls commands:
 
+> [!NOTE]
 #----------------------------------------------------------------------------
 #.| Command |	Actual Command  | Description                                 -
 #.| ls	    |       ls        | List files and directories                  -
