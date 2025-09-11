@@ -35,18 +35,15 @@ sudo chmod +x *.sh
 ./uninstall_zsh_setup.sh
 ```
 
-#### 5.Tips my aliases type this:
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
 ```
 ali
 ```
 ##### This will show zshrc alias thats in use.
 
 
-
-#### 6. Changes to ls commands:
-
-> [!TIP]
-> Helpful advice for doing things better or more easily.
 
 | Command | Actual Command | Description                    |
 |---------|----------------|-------------------------------|
