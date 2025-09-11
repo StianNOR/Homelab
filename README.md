@@ -43,7 +43,7 @@ sudo chmod +x *.sh
 ./portainer_docker_uninstall.sh
 ```
 <br><br>
-##### To uninstall everything run. (After Full Uninstall you need to close terminal window and open new on.)
+##### To uninstall setup_zsh.sh. (After Full Uninstall you need to close terminal window and open new on.)
 ```
 ./uninstall_zsh_setup.sh
 ```
