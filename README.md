@@ -36,7 +36,7 @@ sudo chmod +x *.sh
 ./setup_zsh.sh
 ```
 <br><br>
-#### 4. Uninstall
+#### 4. Uninstall 😦
 ##### To remove Portainer and Docker, run: 😭
 ```
 ./portainer_docker_uninstall.sh
