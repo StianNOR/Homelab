@@ -1,7 +1,8 @@
 ## Simplify and beautify your Linux terminal experience with this handy script. :sparkles:
 <br><br>
 
-### The script supports Linux distros using these package managers: ✅
+The script supports Linux distros using these package managers: ✅
+<br><br>
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
@@ -27,7 +28,7 @@ unzip Hack.zip
 fc-cache -fv
 ```
 
-#### I recommand to go system settings and search for fonts, then adjust all fonts to Hack Nerd Font. Then apply. (If not showing restart.)
+I recommand to go system settings and search for fonts, then adjust all fonts to Hack Nerd Font. Then apply. (If not showing restart.)
 
 <br><br>
 
@@ -39,12 +40,12 @@ fc-cache -fv
 
 <br><br>
 
-#### Each script in this repository is digitally signed with my special security key managed on Keybase.  
+Each script in this repository is digitally signed with my special security key managed on Keybase.  
 This means you can check that the scripts really come from me and haven't been changed by anyone else.
 
 <br><br>
 
-#### Clone and Prepare for Verification ⚠️
+Clone and Prepare for Verification ⚠️
 
 ```
 cd ~ # Go to home directory, Can also check dir whit command: pwd
@@ -55,22 +56,22 @@ sudo chmod +x *.sh
 
 <br><br>
 
-#### Import My Public Key ✅
+Import My Public Key ✅
 
 PGP public key fingerprint:  
 `52FE58C1C8BDA54D68E09C143E305BD749B795A3`
 
 To verify any script before running: ✅
 
-####  Import my GPG public key:
+Import my GPG public key:
 ```
 curl https://keybase.io/sarttech7/pgp_keys.asc | gpg --import
 ```
-#### This imports my current PGP public key with fingerprint: ✅
+This imports my current PGP public key with fingerprint: ✅
 ```
 52FE 58C1 C8BD A54D 68E0 9C14 3E30 5BD7 49B7 95A3
 ```
-#### Verifying Scripts: ✅
+Verifying Scripts: ✅
 ```
 gpg --verify signatures/setup_zsh.sh.asc setup_zsh.sh
 gpg --verify signatures/up.sh.asc up.sh
@@ -78,7 +79,7 @@ gpg --verify signatures/portainerup.sh.asc portainerup.sh
 gpg --verify signatures/portainer_docker_uninstall.sh.asc portainer_docker_uninstall.sh
 gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
 ```
-### You should see an output like: ✅
+You should see an output like: ✅
 ```
 Good signature from "StianNOR <stiannor@duck.com>"
 ```
@@ -98,7 +99,8 @@ trust
 y
 quit
 ```
-#### Note: Only mark keys you personally verify as ultimately trusted. ⚠️
+> [!NOTE]
+> Only mark keys you personally verify as ultimately trusted. ⚠️
 
 > Why Trust Matters  
 > The trust model in GPG prevents blindly trusting keys or signatures.  
@@ -107,12 +109,12 @@ quit
 
 <br><br>
 
-#### After verifying you can go on whit installing: ✅
+After verifying you can go on whit installing: ✅
 
 ```
 ./setup_zsh.sh
 ```
-### Please reboot or relog to make changes. ✅
+Please reboot or relog to make changes. ✅
 
 <br><br>
 ### 4. Install Portainer and Docker: ✅ (You dont need to install Docker and Portainer if not using it.)
@@ -128,14 +130,14 @@ Portainer and docker is ready if you get this msg:
 <br><br>
 
 ### 5. Uninstall (Uninstall scripts are located in /home/$USER/Homelab.) 😦
-#### To remove Portainer and Docker, run: 😭
+To remove Portainer and Docker, run: 😭
 ```
 ./portainer_docker_uninstall.sh
 ```
 
 <br><br>
 
-#### To uninstall the Zsh setup (restart terminal after uninstall): 😭
+To uninstall the Zsh setup (restart terminal after uninstall): 😭
 ```
 ./uninstall_zsh_setup.sh
 ```
@@ -145,14 +147,14 @@ Portainer and docker is ready if you get this msg:
 > [!TIP]
 > Helpful advice for doing things better or more easily.
 <br><br>
-#### To show currently used zsh aliases: 🤓
+To show currently used zsh aliases: 🤓
 ```
 ali
 ```
 
 <br><br>
 
-#### Directories info shortcuts: 📝
+Directories info shortcuts: 📝
 | Command | Actual Command | Description                    |
 |---------|----------------|-------------------------------|
 | ls      | ls             | List files and directories     |
