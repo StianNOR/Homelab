@@ -65,7 +65,9 @@ gpg verify signatures/uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
 ```
 ./setup_zsh.sh
 ```
-## If Fastfetch fails please manual install it and re run the script ./setup_zsh.sh https://github.com/fastfetch-cli/fastfetch
+### If Fastfetch fails please manual install it and re run the script ./setup_zsh.sh https://github.com/fastfetch-cli/fastfetch
+### Then re run ./setup_zsh.sh til no error.
+
 
 ### Please reboot or relog to make changes. ⚠️
 
