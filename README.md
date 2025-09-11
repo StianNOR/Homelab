@@ -1,12 +1,11 @@
 ## Welcome To my Script to make your Terminal life Easier in Linux.
 <br><br>
 
-### The provided script supports Linux distros that use the following package managers, as detected in the script:
-<br><br>
+### The provided script supports Linux distros that use the following package managers:
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
-| DNF     | Fedora, CentOS 8+, RHEL 8+, Rocky Linux, AlmaLinux, etc |
+| DNF     | Fedora, CentOS 8+, RHEL 8+, Rocky Linux, AlmaLinux, etc  |
 | YUM     | CentOS 7, older RHEL versions, Oracle Linux, etc  |
 | Pacman  | Arch Linux, Manjaro, EndeavourOS, Artix Linux, etc      |
 | Zypper  | openSUSE, SUSE, etc     |
