@@ -2,6 +2,8 @@
 
 ### The provided script supports Linux distros that use the following package managers, as detected in the script:
 
+<br><br>
+
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
