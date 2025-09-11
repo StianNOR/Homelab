@@ -78,8 +78,9 @@ Good signature from "StianNOR <stiannor@duck.com>"
 `WARNING: This key is not certified with a trusted signature!/
 There is no indication that the signature belongs to the owner.
 `
-> This means GPG does not yet fully "trust" my key by default. This is not a security flaw but part of GPG’s trust model.
-> You can eliminate the warning by marking my key as trusted locally:
+> This means GPG does not yet fully trust my key by default./
+> This is not a security flaw but part of GPG’s trust model./
+> You can eliminate the warning by marking my key as trusted locally:/
 ```
 gpg --edit-key 3E305BD749B795A3
 # Then type:
