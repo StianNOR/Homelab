@@ -35,9 +35,13 @@ cd Homelab
 sudo chmod +x *.sh
 ./setup_zsh.sh
 ```
+### Please reboot or relog to make changes. ⚠️
+
 <br><br>
 #### 5. Install Portainer and Docker:
-##### Now you should just type 
+##### Now you should just type pup in terminal. Then follow prompts.
+
+<br><br>
 
 #### 5. Uninstall 😦
 ##### To remove Portainer and Docker, run: 😭
