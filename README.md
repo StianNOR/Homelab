@@ -11,7 +11,7 @@
 | Zypper  | openSUSE, SUSE, etc     |
 
 <br><br>
-#### 1. Download and Install Hack Nerd Font Manually. :rocket:
+#### 1. Download and Install Hack Nerd Font Manually. ✅
 These commands will create the font directories, download the font, unzip it, and refresh your font cache.
 Nerd Fonts add nice symbols for your terminal.
 ```
@@ -20,14 +20,14 @@ mkdir -p .local/share/fonts
 cd .local/share/fonts
 ```
 <br><br>
-#### 2. Install Nerd Fonts Hack. :rocket:
+#### 2. Install Nerd Fonts Hack. ✅
 ```
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 unzip Hack.zip
 fc-cache -fv
 ```
 <br><br>
-#### 3. Clone and Install Homelab. :rocket:
+#### 3. Clone and Install Homelab. ✅
 ```
 cd ~          # Go to home directory
 git clone https://github.com/StianNOR/Homelab.git
@@ -37,12 +37,12 @@ sudo chmod +x *.sh
 ```
 <br><br>
 #### 4. Uninstall
-##### To remove Portainer and Docker, run:
+##### To remove Portainer and Docker, run: 😭
 ```
 ./portainer_docker_uninstall.sh
 ```
 <br><br>
-##### To uninstall the Zsh setup (restart terminal after uninstall):
+##### To uninstall the Zsh setup (restart terminal after uninstall): 😭
 ```
 ./uninstall_zsh_setup.sh
 ```
