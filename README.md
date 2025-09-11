@@ -1,5 +1,7 @@
 ### 1. Download and Install Hack Nerd Font Manually
 
+
+
 These commands will create the necessary font directories, navigate into them, download the font, unzip it, and refresh your font cache.
 ```
 cd ~ # Ensure you are in your home directory
@@ -7,12 +9,14 @@ mkdir -p .local/share/fonts
 cd .local/share/fonts
 ```
 
+
 #### 2. Install Nerd Fonts Hack to get symbols and nice look.
 ```
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 unzip Hack.zip
 fc-cache -fv
 ```
+
 
 #### 3. Git Clone and install Homelab
 ```
@@ -30,13 +34,19 @@ sudo chmod +x *.sh
 ./portainer_docker_uninstall.sh
 ```
 
+
+
 ##### To uninstall everything run. (After Full Uninstall you need to close terminal window and open new on.)
 ```
 ./uninstall_zsh_setup.sh
 ```
 
+
+
+
 > [!TIP]
 > Helpful advice for doing things better or more easily.
+
 
 ##### This will show zshrc alias thats in use.
 ```
@@ -44,6 +54,7 @@ ali
 ```
 
 ##### Directories info shortcuts:
+
 | Command | Actual Command | Description                    |
 |---------|----------------|-------------------------------|
 | ls      | ls             | List files and directories     |
