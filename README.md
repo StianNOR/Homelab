@@ -38,13 +38,12 @@ sudo chmod +x *.sh
 > [!TIP]
 > Helpful advice for doing things better or more easily.
 
+##### This will show zshrc alias thats in use.
 ```
 ali
 ```
-##### This will show zshrc alias thats in use.
 
-
-
+##### Directories info shortcuts:
 | Command | Actual Command | Description                    |
 |---------|----------------|-------------------------------|
 | ls      | ls             | List files and directories     |
