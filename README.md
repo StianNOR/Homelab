@@ -63,3 +63,19 @@ ali
 | ll      | ls -l          | Long format detailed listing   |
 | la      | ls -a / ls -la | List all files, including hidden files |
 | sls     | ls -ls         | List with file sizes and details |
+
+<br><br>
+<br><br>
+
+> [!CAUTION]
+
+>Disclaimer
+This script is provided as-is and is intended for use on supported Linux distributions. While it has been tested on common distros, it may cause issues or break your system depending on your configuration.
+
+Use at your own risk. It is strongly recommended to back up any important data before running this script.
+
+The author is not responsible for any data loss, system damage, or other issues that may result from using this script.
+
+If unsure, test in a safe environment like a virtual machine before using on your main system.
+
+
