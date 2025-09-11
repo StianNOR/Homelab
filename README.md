@@ -28,19 +28,17 @@ fc-cache -fv
 ```
 <br><br>
 #### 3. Clone and Install Homelab. ✅
-
+<br><br>
 ### Before Installing. ⚠️⚠️⚠️
-
+<br><br>
 ## Verifying Script Authenticity
-
+<br><br>
 #### Clone Files to be ready for Verifing:
+<br><br>
 ```
-cd ~ # Go to home directory, Can also check dir whit command: pwd
-git clone https://github.com/StianNOR/Homelab.git
-cd Homelab
 sudo chmod +x *.sh
 ```
-
+<br><br>
 Each script is signed with my PGP key available on my [Keybase profile](https://keybase.io/sarttech7).
 
 PGP public key fingerprint:  
