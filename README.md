@@ -45,7 +45,7 @@ ali
 
 #### 6. Changes to ls commands:
 
-> [!NOTE]
+> [!TIP]
 
 | Command | Actual Command | Description                    |
 |---------|----------------|-------------------------------|
