@@ -32,12 +32,13 @@ fc-cache -fv
 <br><br>
 #### 3. Clone and Install Homelab. ✅
 <br><br>
-### Before Installing. 🛑
+
+## Verifying Script Authenticity ⚠️ ⚠️ ⚠️
 <br><br>
-⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-## Verifying Script Authenticity
+#### Each script in this repository is digitally signed with my special security key managed on Keybase. This means you can check that the scripts really come from me and haven't been changed by anyone else.
 <br><br>
-#### Clone Files to be ready for Verifing:
+### Clone and Prepare for Verification !!!
+
 ```
 cd ~ # Go to home directory, Can also check dir whit command: pwd
 git clone https://github.com/StianNOR/Homelab.git
@@ -45,7 +46,7 @@ cd Homelab
 sudo chmod +x *.sh
 ```
 <br><br>
-Each script is signed with my PGP key available on my [Keybase profile](https://keybase.io/sarttech7).
+### Import My Public Key
 
 PGP public key fingerprint:  
 `52FE58C1C8BDA54D68E09C143E305BD749B795A3`
@@ -56,7 +57,11 @@ To verify any script before running, download both the script and its `.asc` sig
 ```
 curl https://keybase.io/sarttech7/pgp_keys.asc | gpg --import
 ```
-### Then verify each file whit command below:
+### This imports my current PGP public key with fingerprint:
+```
+52FE 58C1 C8BD A54D 68E0 9C14 3E30 5BD7 49B7 95A3
+```
+### Verifying Scripts:
 ```
 gpg --verify signatures/setup_zsh.sh.asc setup_zsh.sh
 gpg --verify signatures/up.sh.asc up.sh
@@ -64,17 +69,38 @@ gpg --verify signatures/portainerup.sh.asc portainerup.sh
 gpg --verify signatures/portainer_docker_uninstall.sh.asc portainer_docker_uninstall.sh
 gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
 ```
-⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+## You should see an output like:
+```
+Good signature from "StianNOR <stiannor@duck.com>"
+```
+> [!IMPORTANT]
+> GPG may show a warning:
+`WARNING: This key is not certified with a trusted signature!/
+There is no indication that the signature belongs to the owner.
+`
+> This means GPG does not yet fully "trust" my key by default. This is not a security flaw but part of GPG’s trust model.
+> You can eliminate the warning by marking my key as trusted locally:
+```
+gpg --edit-key 3E305BD749B795A3
+# Then type:
+trust
+# Select option 5 (ultimate trust)
+y
+quit
+```
+#### Note: Only mark keys you personally verify as ultimately trusted.
+
+> Why Trust Matters
+> The trust model in GPG prevents blindly trusting keys or signatures. My Keybase profile provides an additional identity assurance layer, but users must assign trust locally to verify authenticity fully.
+
+
+
 <br><br>
 ## After verifying you can go on whit installing:
 
 ```
 ./setup_zsh.sh
 ```
-### If Fastfetch fails please manual install it and re run the script ./setup_zsh.sh https://github.com/fastfetch-cli/fastfetch
-### Then re run ./setup_zsh.sh til no error.
-
-
 ### Please reboot or relog to make changes. ⚠️
 
 <br><br>
