@@ -23,7 +23,7 @@ mkdir -p .local/share/fonts
 cd .local/share/fonts
 ```
 
-
+<br><br>
 #### 2. Install Nerd Fonts Hack.
 ```
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
@@ -31,7 +31,7 @@ unzip Hack.zip
 fc-cache -fv
 ```
 
-
+<br><br>
 #### 3. Git Clone and install Homelab.
 ```
 cd ~ # Ensure you are in your home directory before cloning
@@ -41,31 +41,34 @@ sudo chmod +x *.sh
 ./setup_zsh.sh
 ```
 
-
+<br><br>
 #### 4. Uninstall
 ##### To remove portainer and docker simply run:
 ```
 ./portainer_docker_uninstall.sh
 ```
-
-
-
+<br><br>
 ##### To uninstall everything run. (After Full Uninstall you need to close terminal window and open new on.)
 ```
 ./uninstall_zsh_setup.sh
 ```
 
+
+
+<br><br>
 > [!TIP]
 > Helpful advice for doing things better or more easily.
 
-
+<br><br>
 ##### This will show zshrc alias thats in use.
 ```
 ali
 ```
 
+<br><br>
 ##### Directories info shortcuts:
 
+<br><br>
 | Command | Actual Command | Description                    |
 |---------|----------------|-------------------------------|
 | ls      | ls             | List files and directories     |
