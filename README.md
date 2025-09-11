@@ -15,7 +15,7 @@
 These commands will create the font directories, download the font, unzip it, and refresh your font cache.
 Nerd Fonts add nice symbols for your terminal.
 ```
-cd ~                # Go to home directory
+cd ~ # Go to home directory, Can also check dir whit command: pwd
 mkdir -p .local/share/fonts 
 cd .local/share/fonts
 ```
@@ -29,7 +29,7 @@ fc-cache -fv
 <br><br>
 #### 3. Clone and Install Homelab. ✅
 ```
-cd ~          # Go to home directory
+cd ~ # Go to home directory, Can also check dir whit command: pwd
 git clone https://github.com/StianNOR/Homelab.git
 cd Homelab
 sudo chmod +x *.sh
