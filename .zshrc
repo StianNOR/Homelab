@@ -48,7 +48,7 @@ else
 fi
 
 # ─── User Aliases and Functions ───────────────────────────────────────
-alias up="/home/$USER/Homelab/ps.sh"
+alias up="/home/$USER/Homelab/up.sh"
 alias pup="/home/$USER/Homelab/portainerup.sh"
 alias p10="p10k configure"
 alias fresh='source ~/.zshrc'
