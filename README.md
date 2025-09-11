@@ -10,17 +10,6 @@
 | Pacman  | Arch Linux, Manjaro, EndeavourOS, Artix Linux, etc      |
 | Zypper  | openSUSE, SUSE, etc     |
 
-## Verifying Script Authenticity
-
-Each script is signed with a PGP key available on my [Keybase profile]([https://keybase.io/sarttech7]).  
-To verify a script before running, do:
-
-
-
-
-
-
-
 <br><br>
 #### 1. Download and Install Hack Nerd Font Manually. ✅
 These commands will create the font directories, download the font, unzip it, and refresh your font cache.
@@ -39,6 +28,26 @@ fc-cache -fv
 ```
 <br><br>
 #### 3. Clone and Install Homelab. ✅
+
+### Before Installing. ⚠️⚠️⚠️
+
+## Verifying Script Authenticity
+
+Each script is signed with my PGP key available on my [Keybase profile](https://keybase.io/sarttech7).
+
+PGP public key fingerprint:  
+`20AA 7564 29A0 B9B9 5974 3F72 E1E4 B2A1 286B A323`
+
+To verify any script before running, download both the script and its `.asc` signature file, then run:
+```
+keybase pgp verify -d setup_zsh.sh.asc -i setup_zsh.sh
+keybase pgp verify -d up.sh.asc -i up.sh
+keybase pgp verify -d portainerup.sh.asc -i portainerup.sh
+keybase pgp verify -d portainer_docker_uninstall.sh.asc -i portainer_docker_uninstall.sh
+keybase pgp verify -d uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
+```
+## After verifying you can go on whit installing:
+
 ```
 cd ~ # Go to home directory, Can also check dir whit command: pwd
 git clone https://github.com/StianNOR/Homelab.git
