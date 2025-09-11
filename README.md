@@ -34,8 +34,10 @@ fc-cache -fv
 ## Verifying Script Authenticity
 <br><br>
 #### Clone Files to be ready for Verifing:
-<br><br>
 ```
+cd ~ # Go to home directory, Can also check dir whit command: pwd
+git clone https://github.com/StianNOR/Homelab.git
+cd Homelab
 sudo chmod +x *.sh
 ```
 <br><br>
@@ -55,10 +57,6 @@ keybase pgp verify -d uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
 ## After verifying you can go on whit installing:
 
 ```
-cd ~ # Go to home directory, Can also check dir whit command: pwd
-git clone https://github.com/StianNOR/Homelab.git
-cd Homelab
-sudo chmod +x *.sh
 ./setup_zsh.sh
 ```
 ### Please reboot or relog to make changes. ⚠️
