@@ -56,6 +56,7 @@ keybase pgp verify -d portainer_docker_uninstall.sh.asc -i portainer_docker_unin
 keybase pgp verify -d uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
 ```
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+<br><br>
 ## After verifying you can go on whit installing:
 
 ```
