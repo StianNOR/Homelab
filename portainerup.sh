@@ -9,6 +9,7 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
+
 info()    { echo -e "${CYAN}ℹ️  $*${RESET}"; }
 success() { echo -e "${GREEN}✅ $*${RESET}"; }
 warn()    { echo -e "${YELLOW}⚠️  $*${RESET}"; }
@@ -24,7 +25,7 @@ fi
 # Keep-alive to update sudo timestamp until script finishes
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# --- Detect Distribution ---
+# --- Detect distribution ---
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     DISTRO_ID="$ID"
@@ -34,62 +35,82 @@ else
     exit 1
 fi
 
-# --- Install Docker and Docker Compose ---
 install_docker() {
     step "Installing Docker for ${BOLD}$DISTRO_ID $DISTRO_VERSION${RESET}..."
+
     case "$DISTRO_ID" in
-        ubuntu|debian|raspbian|linuxmint)
-            info "Adding Docker repository and installing Docker..."
+        ubuntu)
+            info "Adding Docker repository and installing Docker for Ubuntu..."
             sudo apt update
             sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-            echo \
-              "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            UBUNTU_CODENAME="$(lsb_release -cs)"
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $UBUNTU_CODENAME stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
             sudo apt update
             sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             sudo systemctl enable --now docker
             ;;
+
+        debian|raspbian|linuxmint)
+            info "Adding Docker repository and installing Docker for Debian..."
+            sudo apt update
+            sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
+            curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+            DEBIAN_CODENAME="$(lsb_release -cs)"
+            # Use the official Debian codename without fallback, since Docker supports trixie now
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $DEBIAN_CODENAME stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+            sudo apt update
+            sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo systemctl enable --now docker
+            ;;
+
         fedora)
             info "Installing Docker from Fedora repositories..."
             sudo dnf remove -y podman-docker || true
-            sudo dnf install -y moby-engine docker-cli containerd docker-buildx docker-compose docker-compose-switch
+            sudo dnf install -y dnf-plugins-core
+            sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+            sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             sudo systemctl enable --now docker
             ;;
+
         centos|rhel|rocky|almalinux|ol|oracle)
-            info "Adding Docker repository and installing Docker..."
+            info "Adding Docker repository and installing Docker for CentOS/RHEL..."
             sudo yum install -y yum-utils
             sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-            sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+            sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             sudo systemctl enable --now docker
             ;;
+
         arch|manjaro|endeavouros|garuda|artix|arcolinux|antergos|chakra|kaos)
             info "Installing Docker with pacman (Arch-based)..."
             sudo pacman -Sy --noconfirm docker docker-compose
             sudo systemctl enable --now docker
             ;;
+
         opensuse*|suse|sles)
             info "Installing Docker with zypper..."
             sudo zypper install -y docker docker-compose
             sudo systemctl enable --now docker
             ;;
+
         alpine)
             info "Installing Docker with apk..."
             sudo apk add --update docker docker-compose
             sudo rc-update add docker boot
             sudo service docker start
             ;;
+
         *)
             error "Unsupported or unrecognized Linux distribution: $DISTRO_ID"
             exit 1
             ;;
     esac
 
-    # Fix potential permission issues on Docker config directory
     sudo chown -R "$USER":"$USER" "$HOME/.docker" || true
     sudo chmod -R g+rwx "$HOME/.docker" || true
 
-    # Add user to docker group if not already present
     if ! groups "$USER" | grep -qw docker; then
         sudo usermod -aG docker "$USER"
         warn "User '$USER' has been added to the 'docker' group."
@@ -102,11 +123,10 @@ install_docker() {
     fi
 }
 
-# --- Main Logic ---
 step "Checking for Docker..."
 if ! command -v docker &>/dev/null; then
     warn "Docker not found. Starting installation..."
-    install_docker # Will install Docker and may exit if user added to group
+    install_docker
 else
     success "Docker is already installed."
 fi
@@ -128,7 +148,7 @@ fi
 step "Checking for Docker Compose plugin..."
 if ! docker compose version &>/dev/null && ! command -v docker-compose &>/dev/null; then
     warn "Docker Compose (or plugin) not found. Attempting to install..."
-    install_docker # This will install Docker Compose components if missing
+    install_docker
 else
     success "Docker Compose is already installed."
 fi
@@ -184,10 +204,10 @@ fi
 
 success "Portainer is now installed and running!"
 
-# --- Display Portainer Dashboard Link ---
 IP=$(hostname -I 2>/dev/null | awk '{print $1}')
 if [ -z "$IP" ]; then
     IP="localhost"
 fi
+
 echo -e "${BOLD}${CYAN}🌐 Access your Portainer dashboard at:${RESET} ${GREEN}https://$IP:9443${RESET}"
 echo -e "${YELLOW}Note: You may need to accept a self-signed certificate in your browser for HTTPS.${RESET}"
