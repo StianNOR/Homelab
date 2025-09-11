@@ -117,9 +117,10 @@ quit
 <br><br>
 ### 4. Install Portainer and Docker: ✅ (You dont need to install Docker and Portainer if not using it.)
 <br><br>
-#### Now you should just type pup in terminal. Then follow prompts.
-#### When prompted to reboot or relog do so, and also do `newgrp docker` if prompted.
-#### Portainer and docker is ready if you get this msg:
+Now you should just type pup in terminal. Then follow prompts.
+When prompted to reboot or relog do so, and also do `newgrp docker` if prompted.
+Portainer and docker is ready if you get this msg:
+<br><br>
 <img width="661" height="46" alt="image" src="https://github.com/user-attachments/assets/41a5297a-fe00-41cb-acb7-67e1a98acbb5" />
 <br><br>
 ### If you installed Portainer and Docker you can in future use command `pup` to also update portainer.
