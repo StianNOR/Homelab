@@ -42,7 +42,7 @@ sudo chmod +x *.sh
 ./portainer_docker_uninstall.sh
 ```
 <br><br>
-##### o uninstall the Zsh setup (restart terminal after uninstall):
+##### To uninstall the Zsh setup (restart terminal after uninstall):
 ```
 ./uninstall_zsh_setup.sh
 ```
