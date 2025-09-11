@@ -82,7 +82,7 @@ gpg verify signatures/uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
 
 <br><br>
 
-#### 5. Uninstall 😦
+#### 5. Uninstall (Uninstall scripts are located in /home/$USER/Homelab.) 😦
 ##### To remove Portainer and Docker, run: 😭
 ```
 ./portainer_docker_uninstall.sh
