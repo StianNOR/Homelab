@@ -26,6 +26,9 @@ wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 unzip Hack.zip
 fc-cache -fv
 ```
+
+##### I recommand to go system settings and search for fonts, then adjust all fonts to Hack Nerd Font. Then apply. (If not showing restart.)
+
 <br><br>
 #### 3. Clone and Install Homelab. ✅
 <br><br>
