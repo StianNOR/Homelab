@@ -7,7 +7,7 @@ cd ~ # Ensure you are in your home directory
 mkdir -p .local/share/fonts
 cd .local/share/fonts
 
-
+undefined
 
 ---
 
