@@ -44,7 +44,7 @@ sudo chmod +x *.sh
 Each script is signed with my PGP key available on my [Keybase profile](https://keybase.io/sarttech7).
 
 PGP public key fingerprint:  
-`20AA 7564 29A0 B9B9 5974 3F72 E1E4 B2A1 286B A323`
+`52FE58C1C8BDA54D68E09C143E305BD749B795A3`
 
 To verify any script before running, download both the script and its `.asc` signature file, then run:
 ```
