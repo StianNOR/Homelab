@@ -1,7 +1,7 @@
 ## Welcome to My Script to Make Your Terminal Life Easier on Linux. :sparkles:
 <br><br>
 
-### The script supports Linux distros using these package managers:
+### The script supports Linux distros using these package managers: :rocket:
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
@@ -11,7 +11,7 @@
 | Zypper  | openSUSE, SUSE, etc     |
 
 <br><br>
-#### 1. Download and Install Hack Nerd Font Manually.
+#### 1. Download and Install Hack Nerd Font Manually. :rocket:
 These commands will create the font directories, download the font, unzip it, and refresh your font cache.
 Nerd Fonts add nice symbols for your terminal.
 ```
@@ -20,14 +20,14 @@ mkdir -p .local/share/fonts
 cd .local/share/fonts
 ```
 <br><br>
-#### 2. Install Nerd Fonts Hack.
+#### 2. Install Nerd Fonts Hack. :rocket:
 ```
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 unzip Hack.zip
 fc-cache -fv
 ```
 <br><br>
-#### 3. Clone and Install Homelab.
+#### 3. Clone and Install Homelab. :rocket:
 ```
 cd ~          # Go to home directory
 git clone https://github.com/StianNOR/Homelab.git
