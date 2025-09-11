@@ -52,3 +52,21 @@ ali                                        -
 #- la	    | ls -a / ls -la | List all files, including hidden files   -
 #- sls	    |     ls -ls	   | List with file sizes and details       -
 #----------------------------------------------------------------------
+
+
+---
+
+# Tips my aliases type this
+ali
+
+# This will show zshrc alias thats in use.
+
+---
+
+# Changes to ls commands:
+# Command | Actual Command | Description
+# ls      | ls             | List files and directories
+# ll      | ls -l          | Long format detailed listing
+# la      | ls -a / ls -la | List all files, including hidden files
+# sls     | ls -ls         | List with file sizes and details
+
