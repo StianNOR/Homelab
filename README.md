@@ -3,7 +3,6 @@
 ### The provided script supports Linux distros that use the following package managers, as detected in the script:
 
 <br><br>
-
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
@@ -12,7 +11,7 @@
 | Pacman  | Arch Linux, Manjaro, EndeavourOS, Artix Linux, etc      |
 | Zypper  | openSUSE, SUSE, etc     |
 
-
+<br><br>
 #### 1. Download and Install Hack Nerd Font Manually.
 
 
