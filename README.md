@@ -33,6 +33,14 @@ fc-cache -fv
 
 ## Verifying Script Authenticity
 
+#### Clone Files to be ready for Verifing:
+```
+cd ~ # Go to home directory, Can also check dir whit command: pwd
+git clone https://github.com/StianNOR/Homelab.git
+cd Homelab
+sudo chmod +x *.sh
+```
+
 Each script is signed with my PGP key available on my [Keybase profile](https://keybase.io/sarttech7).
 
 PGP public key fingerprint:  
