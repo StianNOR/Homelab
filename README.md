@@ -74,7 +74,7 @@ gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
 Good signature from "StianNOR <stiannor@duck.com>"
 ```
 > [!IMPORTANT]
-> GPG may show a warning:
+> GPG may show a warning:/
 `WARNING: This key is not certified with a trusted signature!/
 There is no indication that the signature belongs to the owner.
 `
