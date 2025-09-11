@@ -35,7 +35,8 @@ fc-cache -fv
 
 ## Verifying Script Authenticity ⚠️
 <br><br>
-#### Each script in this repository is digitally signed with my special security key managed on Keybase. This means you can check that the scripts really come from me and haven't been changed by anyone else.
+#### Each script in this repository is digitally signed with my special security key managed on Keybase.  
+This means you can check that the scripts really come from me and haven't been changed by anyone else.
 <br><br>
 ### Clone and Prepare for Verification ⚠️
 
@@ -74,13 +75,13 @@ gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
 Good signature from "StianNOR <stiannor@duck.com>"
 ```
 > [!IMPORTANT]
-> GPG may show a warning:/
-`WARNING: This key is not certified with a trusted signature!/
+> GPG may show a warning:  
+`WARNING: This key is not certified with a trusted signature!  
 There is no indication that the signature belongs to the owner.
 `
-> This means GPG does not yet fully trust my key by default./
-> This is not a security flaw but part of GPG’s trust model./
-> You can eliminate the warning by marking my key as trusted locally:/
+> This means GPG does not yet fully trust my key by default.  
+> This is not a security flaw but part of GPG’s trust model.  
+> You can eliminate the warning by marking my key as trusted locally:  
 ```
 gpg --edit-key 3E305BD749B795A3
 # Then type:
@@ -91,9 +92,9 @@ quit
 ```
 #### Note: Only mark keys you personally verify as ultimately trusted. ⚠️
 
-> Why Trust Matters
-> The trust model in GPG prevents blindly trusting keys or signatures./
-> My Keybase profile provides an additional identity assurance layer,/
+> Why Trust Matters  
+> The trust model in GPG prevents blindly trusting keys or signatures.  
+> My Keybase profile provides an additional identity assurance layer,  
 > but users must assign trust locally to verify authenticity fully.
 
 
@@ -152,14 +153,14 @@ ali
 > [!CAUTION]
 > Disclaimer ⚠️
 <br><br>
-> This script is provided as-is and intended to be used on supported Linux distributions./
+> This script is provided as-is and intended to be used on supported Linux distributions.  
 > While it has been tested on common setups, it may not work perfectly on every system and could cause issues or damage depending on your configuration.
 <br><br>
 > Use it at your own risk. Please back up any important data before running these scripts. The author is not responsible for any loss or damage.
 <br><br>
 > If you're unsure, try running these scripts first in a safe environment such as a virtual machine.
 <br><br>
-> Important: This project is fully open and free for everyone to use. It is not designed for cheating, hacking, or any harmful purposes./
+> Important: This project is fully open and free for everyone to use. It is not designed for cheating, hacking, or any harmful purposes.  
 > The code is shared in good faith for learning, improvement, and > community use.
 
 
