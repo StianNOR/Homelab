@@ -202,20 +202,9 @@ for plugin in "${!plugins[@]}"; do
   fi
 done
 
-# ----- 10. Copy up.sh inside Homelab and set permissions -----
-step "Setting up up.sh maintenance script..."
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-if [ -f "$SCRIPT_DIR/up.sh" ]; then
-    cp "$SCRIPT_DIR/up.sh" "$HOME/Homelab/up.sh"
-    chmod +x "$HOME/Homelab/up.sh"
-    success "up.sh copied to $HOME/Homelab and made executable."
-else
-    warn "up.sh not found in $SCRIPT_DIR. Skipping."
-fi
-
-# ----- 11. Copy .zshrc and .p10k.zsh from repo with error checking -----
+# ----- 10. Copy .zshrc and .p10k.zsh from repo with error checking -----
 step "Copying .zshrc and .p10k.zsh from repo..."
+SCRIPT_DIR="$HOME/Homelab"
 REPO_ZSHRC="$SCRIPT_DIR/.zshrc"
 DEST_ZSHRC="$HOME/.zshrc"
 REPO_P10K="$SCRIPT_DIR/.p10k.zsh"
