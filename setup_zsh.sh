@@ -202,10 +202,10 @@ for plugin in "${!plugins[@]}"; do
   fi
 done
 
-# ----- 10. Ensure up.sh stays inside ~/Homelab and set permissions -----
+# ----- 10. Copy up.sh inside Homelab and set permissions -----
 step "Setting up up.sh maintenance script..."
-mkdir -p "$HOME/Homelab"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 if [ -f "$SCRIPT_DIR/up.sh" ]; then
     cp "$SCRIPT_DIR/up.sh" "$HOME/Homelab/up.sh"
     chmod +x "$HOME/Homelab/up.sh"
