@@ -82,4 +82,4 @@ ali
 `While it has been tested on common distros, it may cause issues or break your system depending on your configuration.`\
 `Use at your own risk. It is strongly recommended to back up any important data before running this script.`\
 `The author is not responsible for any data loss, system damage, or other issues that may result from using this script.`\
-`If unsure, test in a safe environment like a virtual machine before using on your main system.`\
+`If unsure, test in a safe environment like a virtual machine before using on your main system.`
