@@ -10,6 +10,7 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 BOLD='\033[1m'
 RESET='\033[0m'
+
 info()    { echo -e "${CYAN}ℹ️  $*${RESET}"; }
 success() { echo -e "${GREEN}✅ $*${RESET}"; }
 warn()    { echo -e "${YELLOW}⚠️  $*${RESET}"; }
@@ -87,6 +88,7 @@ if ! $UPDATE; then
   exit 1
 fi
 success "Package manager updated."
+
 if [[ "$PM" == "pacman" ]]; then
     if ! $INSTALL curl git ruby gcc make; then
       error "Dependency install failed. Check pacman output."
@@ -111,6 +113,7 @@ else
         warn "RubyGems system update failed or is not supported on this distribution."
     fi
 fi
+
 if gem update; then
     success "All installed gems updated."
 else
@@ -121,6 +124,7 @@ fi
 step "Checking for colorls Ruby gem..."
 export GEM_HOME="$HOME/.gem"
 export PATH="$PATH:$GEM_HOME/bin"
+
 if ! gem list -i colorls >/dev/null 2>&1; then
     info "Installing colorls Ruby gem for your user..."
     if ! gem install --user-install colorls; then
@@ -131,11 +135,13 @@ if ! gem list -i colorls >/dev/null 2>&1; then
 else
     success "colorls is already installed."
 fi
+
 USER_GEM_BIN="$(ruby -e 'puts Gem.user_dir')/bin"
 if ! grep -q "$USER_GEM_BIN" "$HOME/.zshrc"; then
   echo "export PATH=\"\$PATH:$USER_GEM_BIN\"" >> "$HOME/.zshrc"
   info "Added $USER_GEM_BIN to your PATH in .zshrc"
 fi
+
 if ! command -v colorls >/dev/null 2>&1; then
     warn "colorls binary not found in PATH. You may need to restart your shell or source your .zshrc."
 fi
@@ -143,12 +149,14 @@ fi
 # ----- 6. Install fastfetch -----
 step "Checking for fastfetch..."
 if ! command -v fastfetch >/dev/null 2>&1; then
-    info "Installing fastfetch..."
-    if ! curl -sSL https://alessandromrc.github.io/fastfetch-installer/installer.sh | sudo bash; then
-      error "fastfetch install failed."
-      exit 1
+    info "fastfetch not found in PATH. Trying to install via package manager..."
+    if $INSTALL fastfetch; then
+        success "fastfetch installed via package manager."
+    else
+        warn "Fastfetch package install failed or not available in your repo."
+        echo -e "${YELLOW}Please install fastfetch manually and then re-run this script.${RESET}"
+        exit 1
     fi
-    success "fastfetch installed."
 else
     success "fastfetch is already installed."
 fi
@@ -166,6 +174,7 @@ if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
 else
     success "Oh My Zsh is already installed."
 fi
+
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
 # ----- 8. Install Powerlevel10k theme -----
@@ -189,6 +198,7 @@ plugins=(
   [zsh-syntax-highlighting]="https://github.com/zsh-users/zsh-syntax-highlighting"
   [zsh-completions]="https://github.com/zsh-users/zsh-completions"
 )
+
 for plugin in "${!plugins[@]}"; do
   if [ ! -d "$ZSH_CUSTOM/plugins/$plugin" ]; then
     info "Installing plugin: $plugin"
@@ -209,6 +219,7 @@ REPO_ZSHRC="$SCRIPT_DIR/.zshrc"
 DEST_ZSHRC="$HOME/.zshrc"
 REPO_P10K="$SCRIPT_DIR/.p10k.zsh"
 DEST_P10K="$HOME/.p10k.zsh"
+
 if [ -f "$REPO_ZSHRC" ]; then
   cp "$REPO_ZSHRC" "$DEST_ZSHRC"
   success ".zshrc copied to $DEST_ZSHRC"
@@ -216,6 +227,7 @@ else
   warn "$REPO_ZSHRC not found. .zshrc was NOT copied."
   ls -l "$SCRIPT_DIR"
 fi
+
 if [ -f "$REPO_P10K" ]; then
   cp "$REPO_P10K" "$DEST_P10K"
   success ".p10k.zsh copied to $DEST_P10K"
@@ -223,7 +235,7 @@ else
   warn "No .p10k.zsh found in $SCRIPT_DIR. Skipping."
 fi
 
-# ----- 12. Change default shell to zsh if not already -----
+# ----- 11. Change default shell to zsh if not already -----
 step "Checking default shell..."
 if [ "$SHELL" != "$(which zsh)" ]; then
   if chsh -s "$(which zsh)"; then
@@ -238,6 +250,7 @@ fi
 echo -e "${GREEN}${BOLD}
 🎉 All Zsh plugins, Powerlevel10k, colorls, fastfetch, and up.sh are installed and configured! 🎉
 ${RESET}"
+
 echo -e "${CYAN}The up.sh script is now located in: ~/Homelab/up.sh${RESET}"
 echo -e "${CYAN}Refreshing your shell in 3 seconds...${RESET}"
 sleep 3
