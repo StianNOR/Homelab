@@ -51,7 +51,7 @@ sudo chmod +x *.sh
 PGP public key fingerprint:  
 `52FE58C1C8BDA54D68E09C143E305BD749B795A3`
 
-To verify any script before running, download both the script and its `.asc` signature file, then run:
+To verify any script before running:
 
 ###  Import my GPG public key:
 ```
