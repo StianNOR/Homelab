@@ -49,11 +49,11 @@ PGP public key fingerprint:
 
 To verify any script before running, download both the script and its `.asc` signature file, then run:
 ```
-keybase pgp verify -d setup_zsh.sh.asc -i setup_zsh.sh
-keybase pgp verify -d up.sh.asc -i up.sh
-keybase pgp verify -d portainerup.sh.asc -i portainerup.sh
-keybase pgp verify -d portainer_docker_uninstall.sh.asc -i portainer_docker_uninstall.sh
-keybase pgp verify -d uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
+keybase pgp verify -d signatures/setup_zsh.sh.asc -i setup_zsh.sh
+keybase pgp verify -d signatures/up.sh.asc -i up.sh
+keybase pgp verify -d signatures/portainerup.sh.asc -i portainerup.sh
+keybase pgp verify -d signatures/portainer_docker_uninstall.sh.asc -i portainer_docker_uninstall.sh
+keybase pgp verify -d signatures/uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
 ```
 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 <br><br>
