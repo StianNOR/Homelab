@@ -161,3 +161,10 @@ ali
 <br><br>
 > Important: This project is fully open and free for everyone to use. It is not designed for cheating, hacking, or any harmful purposes./
 > The code is shared in good faith for learning, improvement, and > community use.
+
+
+> [!NOTE]
+> With best regards,/
+> StianNOR/
+> (Known as sarttech7 on Keybase)/
+> https://keybase.io/sarttech7
