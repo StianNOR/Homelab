@@ -11,7 +11,7 @@
 | Zypper  | openSUSE, SUSE, etc     |
 
 <br><br>
-#### 1. Download and Install Hack Nerd Font Manually. ✅
+### 1. Download and Install Hack Nerd Font Manually. ✅
 These commands will create the font directories, download the font, unzip it, and refresh your font cache.
 Nerd Fonts add nice symbols for your terminal.
 ```
@@ -20,25 +20,31 @@ mkdir -p .local/share/fonts
 cd .local/share/fonts
 ```
 <br><br>
-#### 2. Install Nerd Fonts Hack. ✅
+### 2. Install Nerd Fonts Hack. ✅
 ```
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 unzip Hack.zip
 fc-cache -fv
 ```
 
-##### I recommand to go system settings and search for fonts, then adjust all fonts to Hack Nerd Font. Then apply. (If not showing restart.)
+#### I recommand to go system settings and search for fonts, then adjust all fonts to Hack Nerd Font. Then apply. (If not showing restart.)
 
 <br><br>
-#### 3. Clone and Install Homelab. ✅
+
+### 3. Clone Verify and Install Homelab. ✅
+
 <br><br>
 
-## Verifying Script Authenticity ⚠️
+### Verifying Script Authenticity ⚠️
+
 <br><br>
+
 #### Each script in this repository is digitally signed with my special security key managed on Keybase.  
 This means you can check that the scripts really come from me and haven't been changed by anyone else.
+
 <br><br>
-### Clone and Prepare for Verification ⚠️
+
+#### Clone and Prepare for Verification ⚠️
 
 ```
 cd ~ # Go to home directory, Can also check dir whit command: pwd
@@ -46,23 +52,25 @@ git clone https://github.com/StianNOR/Homelab.git
 cd Homelab
 sudo chmod +x *.sh
 ```
+
 <br><br>
-### Import My Public Key ✅
+
+#### Import My Public Key ✅
 
 PGP public key fingerprint:  
 `52FE58C1C8BDA54D68E09C143E305BD749B795A3`
 
 To verify any script before running: ✅
 
-###  Import my GPG public key:
+####  Import my GPG public key:
 ```
 curl https://keybase.io/sarttech7/pgp_keys.asc | gpg --import
 ```
-### This imports my current PGP public key with fingerprint: ✅
+#### This imports my current PGP public key with fingerprint: ✅
 ```
 52FE 58C1 C8BD A54D 68E0 9C14 3E30 5BD7 49B7 95A3
 ```
-### Verifying Scripts: ✅
+#### Verifying Scripts: ✅
 ```
 gpg --verify signatures/setup_zsh.sh.asc setup_zsh.sh
 gpg --verify signatures/up.sh.asc up.sh
@@ -70,7 +78,7 @@ gpg --verify signatures/portainerup.sh.asc portainerup.sh
 gpg --verify signatures/portainer_docker_uninstall.sh.asc portainer_docker_uninstall.sh
 gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
 ```
-## You should see an output like: ✅
+### You should see an output like: ✅
 ```
 Good signature from "StianNOR <stiannor@duck.com>"
 ```
@@ -97,10 +105,9 @@ quit
 > My Keybase profile provides an additional identity assurance layer,  
 > but users must assign trust locally to verify authenticity fully.
 
-
-
 <br><br>
-## After verifying you can go on whit installing: ✅
+
+#### After verifying you can go on whit installing: ✅
 
 ```
 ./setup_zsh.sh
@@ -108,46 +115,49 @@ quit
 ### Please reboot or relog to make changes. ✅
 
 <br><br>
-#### 5. Install Portainer and Docker: ✅
+### 4. Install Portainer and Docker: ✅ (You dont need to install Docker and Portainer if not using it.)
 <br><br>
-##### Now you should just type pup in terminal. Then follow prompts.
-##### When prompted to reboot or relog do so, and also do `newgrp docker` if prompted.
-##### Portainer and docker is ready if you get this msg:
+#### Now you should just type pup in terminal. Then follow prompts.
+#### When prompted to reboot or relog do so, and also do `newgrp docker` if prompted.
+#### Portainer and docker is ready if you get this msg:
 <img width="661" height="46" alt="image" src="https://github.com/user-attachments/assets/41a5297a-fe00-41cb-acb7-67e1a98acbb5" />
-
-
+<br><br>
+### If you installed Portainer and Docker you can in future use command `pup` to also update portainer.
 
 <br><br>
 
-#### 5. Uninstall (Uninstall scripts are located in /home/$USER/Homelab.) 😦
-##### To remove Portainer and Docker, run: 😭
+### 5. Uninstall (Uninstall scripts are located in /home/$USER/Homelab.) 😦
+#### To remove Portainer and Docker, run: 😭
 ```
 ./portainer_docker_uninstall.sh
 ```
+
 <br><br>
-##### To uninstall the Zsh setup (restart terminal after uninstall): 😭
+
+#### To uninstall the Zsh setup (restart terminal after uninstall): 😭
 ```
 ./uninstall_zsh_setup.sh
 ```
 
 <br><br>
+
 > [!TIP]
 > Helpful advice for doing things better or more easily.
 <br><br>
-##### To show currently used zsh aliases: 🤓
+#### To show currently used zsh aliases: 🤓
 ```
 ali
 ```
+
 <br><br>
-##### Directories info shortcuts: 📝
+
+#### Directories info shortcuts: 📝
 | Command | Actual Command | Description                    |
 |---------|----------------|-------------------------------|
 | ls      | ls             | List files and directories     |
 | ll      | ls -l          | Long format detailed listing   |
 | la      | ls -a / ls -la | List all files, including hidden files |
 | sls     | ls -ls         | List with file sizes and details |
-
-<br><br>
 
 <br><br>
 
@@ -159,7 +169,6 @@ https://keybase.io/sarttech7
 
 <br><br>
 <br><br>
-
 
 > [!CAUTION]
 > Disclaimer ⚠️
