@@ -1,7 +1,7 @@
-## Welcome To my Script to make your Terminal life Easier in Linux.
+## Welcome to My Script to Make Your Terminal Life Easier on Linux.
 <br><br>
 
-### The provided script supports Linux distros that use the following package managers:
+### The script supports Linux distros using these package managers:
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
@@ -12,10 +12,10 @@
 
 <br><br>
 #### 1. Download and Install Hack Nerd Font Manually.
-These commands will create the necessary font directories, navigate into them, download the font, unzip it, and refresh your font cache.
-(NerdFont will make it look much nicer and add allot of used symboles.)
+These commands will create the font directories, download the font, unzip it, and refresh your font cache.
+Nerd Fonts add nice symbols for your terminal.
 ```
-cd ~ # Ensure you are in your home directory
+cd ~                # Go to home directory
 mkdir -p .local/share/fonts 
 cd .local/share/fonts
 ```
@@ -27,9 +27,9 @@ unzip Hack.zip
 fc-cache -fv
 ```
 <br><br>
-#### 3. Git Clone and install Homelab.
+#### 3. Clone and Install Homelab.
 ```
-cd ~ # Ensure you are in your home directory before cloning
+cd ~          # Go to home directory
 git clone https://github.com/StianNOR/Homelab.git
 cd Homelab
 sudo chmod +x *.sh
@@ -37,12 +37,12 @@ sudo chmod +x *.sh
 ```
 <br><br>
 #### 4. Uninstall
-##### To remove portainer and docker simply run:
+##### To remove Portainer and Docker, run:
 ```
 ./portainer_docker_uninstall.sh
 ```
 <br><br>
-##### To uninstall setup_zsh.sh. (After Full Uninstall you need to close terminal window and open new on.)
+##### o uninstall the Zsh setup (restart terminal after uninstall):
 ```
 ./uninstall_zsh_setup.sh
 ```
@@ -51,7 +51,7 @@ sudo chmod +x *.sh
 > [!TIP]
 > Helpful advice for doing things better or more easily.
 <br><br>
-##### This will show zshrc alias thats in use.
+##### To show currently used zsh aliases:
 ```
 ali
 ```
