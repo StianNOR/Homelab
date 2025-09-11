@@ -76,6 +76,7 @@ ali
 
 > [!CAUTION]
 > Disclaimer ⚠️
+<br><br>
 `
 This script is provided as-is and is intended for use on supported Linux distributions. While it has been tested on common distros, it may cause issues or break your system depending on your configuration.
 Use at your own risk. It is strongly recommended to back up any important data before running this script.
