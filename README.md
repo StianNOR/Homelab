@@ -164,7 +164,7 @@ ali
 
 
 > [!NOTE]
-> With best regards,/
-> StianNOR/
-> (Known as sarttech7 on Keybase)/
-> https://keybase.io/sarttech7
+With best regards,
+StianNOR
+(Known as sarttech7 on Keybase)
+https://keybase.io/sarttech7
