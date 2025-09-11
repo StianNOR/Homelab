@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 set -o pipefail
+
 # --- Colors and Formatting ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -14,6 +15,7 @@ success() { echo -e "${GREEN}✅ $*${RESET}"; }
 warn()    { echo -e "${YELLOW}⚠️  $*${RESET}"; }
 error()   { echo -e "${RED}❌ $*${RESET}"; }
 step()    { echo -e "${BOLD}${BLUE}➤ $*${RESET}"; }
+
 # --- Global error trap for fail-safe ---
 trap '{
   error "Script failed at line $LINENO. Last command: $BASH_COMMAND"
@@ -21,6 +23,7 @@ trap '{
   warn "If on Arch/Manjaro, check pacman locks and mirrors. If on Ubuntu/Debian, check apt sources and network."
   exit 1
 }' ERR
+
 # ----- 1. Detect package manager -----
 step "Detecting package manager..."
 if command -v apt >/dev/null 2>&1; then
@@ -63,6 +66,7 @@ else
     exit 1
 fi
 success "Detected package manager: $PM"
+
 # ----- 2. Install zsh if missing -----
 step "Ensuring zsh is installed..."
 if ! command -v zsh >/dev/null 2>&1; then
@@ -75,6 +79,7 @@ if ! command -v zsh >/dev/null 2>&1; then
 else
     success "zsh is already installed."
 fi
+
 # ----- 3. Install dependencies -----
 step "Updating package lists and installing dependencies..."
 if ! $UPDATE; then
@@ -88,13 +93,13 @@ if [[ "$PM" == "pacman" ]]; then
       exit 1
     fi
 else
-    # RedHat/Fedora could be ruby-devel, *buntu is ruby-dev
     if ! $INSTALL curl git ruby ruby-devel gcc make && ! $INSTALL ruby ruby-dev gcc make; then
       error "Dependency install failed. Check package manager output."
       exit 1
     fi
 fi
 success "Dependencies installed."
+
 # ----- 4. Update RubyGems and all gems -----
 step "Updating RubyGems and all installed gems..."
 if [[ "$PM" == "apt" ]]; then
@@ -111,6 +116,7 @@ if gem update; then
 else
     warn "Gem update failed. Some gems may not have been updated."
 fi
+
 # ----- 5. Install colorls (user install, not sudo) -----
 step "Checking for colorls Ruby gem..."
 export GEM_HOME="$HOME/.gem"
@@ -133,6 +139,7 @@ fi
 if ! command -v colorls >/dev/null 2>&1; then
     warn "colorls binary not found in PATH. You may need to restart your shell or source your .zshrc."
 fi
+
 # ----- 6. Install fastfetch -----
 step "Checking for fastfetch..."
 if ! command -v fastfetch >/dev/null 2>&1; then
@@ -145,6 +152,7 @@ if ! command -v fastfetch >/dev/null 2>&1; then
 else
     success "fastfetch is already installed."
 fi
+
 # ----- 7. Install Oh My Zsh -----
 step "Checking for Oh My Zsh..."
 if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
@@ -159,6 +167,7 @@ else
     success "Oh My Zsh is already installed."
 fi
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
 # ----- 8. Install Powerlevel10k theme -----
 step "Checking for Powerlevel10k theme..."
 if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
@@ -171,6 +180,7 @@ if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
 else
     success "Powerlevel10k theme is already installed."
 fi
+
 # ----- 9. Install plugins -----
 step "Checking for Zsh plugins..."
 declare -A plugins
@@ -191,17 +201,19 @@ for plugin in "${!plugins[@]}"; do
     success "Plugin $plugin is already installed."
   fi
 done
-# ----- 10. Move up.sh to ~/Homelab and set permissions -----
+
+# ----- 10. Ensure up.sh stays inside ~/Homelab and set permissions -----
 step "Setting up up.sh maintenance script..."
 mkdir -p "$HOME/Homelab"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE}")" && pwd)"
 if [ -f "$SCRIPT_DIR/up.sh" ]; then
-    mv "$SCRIPT_DIR/up.sh" "$HOME/Homelab/up.sh"
+    cp "$SCRIPT_DIR/up.sh" "$HOME/Homelab/up.sh"
     chmod +x "$HOME/Homelab/up.sh"
-    success "up.sh moved to $HOME/Homelab and made executable."
+    success "up.sh copied to $HOME/Homelab and made executable."
 else
     warn "up.sh not found in $SCRIPT_DIR. Skipping."
 fi
+
 # ----- 11. Copy .zshrc and .p10k.zsh from repo with error checking -----
 step "Copying .zshrc and .p10k.zsh from repo..."
 REPO_ZSHRC="$SCRIPT_DIR/.zshrc"
@@ -221,6 +233,7 @@ if [ -f "$REPO_P10K" ]; then
 else
   warn "No .p10k.zsh found in $SCRIPT_DIR. Skipping."
 fi
+
 # ----- 12. Change default shell to zsh if not already -----
 step "Checking default shell..."
 if [ "$SHELL" != "$(which zsh)" ]; then
@@ -232,6 +245,7 @@ if [ "$SHELL" != "$(which zsh)" ]; then
 else
   success "zsh is already the default shell."
 fi
+
 echo -e "${GREEN}${BOLD}
 🎉 All Zsh plugins, Powerlevel10k, colorls, fastfetch, and up.sh are installed and configured! 🎉
 ${RESET}"
