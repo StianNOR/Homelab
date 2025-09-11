@@ -1,7 +1,7 @@
 ## Welcome to My Script to Make Your Terminal Life Easier on Linux. :sparkles:
 <br><br>
 
-### The script supports Linux distros using these package managers: :rocket:
+### The script supports Linux distros using these package managers: ✅
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
