@@ -51,6 +51,12 @@ PGP public key fingerprint:
 `52FE58C1C8BDA54D68E09C143E305BD749B795A3`
 
 To verify any script before running, download both the script and its `.asc` signature file, then run:
+
+###  Import my GPG public key:
+```
+curl https://keybase.io/sarttech7/pgp_keys.asc | gpg --import
+```
+### Then verify each file whit command below:
 ```
 gpg verify signatures/setup_zsh.sh.asc -i setup_zsh.sh
 gpg verify signatures/up.sh.asc -i up.sh
