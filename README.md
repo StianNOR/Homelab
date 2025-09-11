@@ -74,7 +74,7 @@ gpg verify signatures/uninstall_zsh_setup.sh.asc -i uninstall_zsh_setup.sh
 ##### Now you should just type pup in terminal. Then follow prompts.
 ##### When prompted to reboot or relog do so, and also do `newgrp docker` if prompted.
 ##### Portainer and docker is ready if you get this msg:
-<img width="1686" height="308" alt="image" src="https://github.com/user-attachments/assets/3b83f07b-e651-4816-a638-b7f8024a39c4" />
+<img width="661" height="46" alt="image" src="https://github.com/user-attachments/assets/41a5297a-fe00-41cb-acb7-67e1a98acbb5" />
 
 
 
