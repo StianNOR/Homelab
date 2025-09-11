@@ -1,6 +1,7 @@
 ## Welcome To my Script to make your Terminal life Easier in Linux.
 
 ### The provided script supports Linux distros that use the following package managers, as detected in the script:
+
 | Package Manager | Distro |
 |---------|----------------|
 | APT     | Debian, Ubuntu, LinuxMint, PopOS, Deepin, etc  |
@@ -10,10 +11,11 @@
 | Zypper  | openSUSE, SUSE, etc     |
 
 
-#### 1. Download and Install Hack Nerd Font Manually
+#### 1. Download and Install Hack Nerd Font Manually.
 
 
 These commands will create the necessary font directories, navigate into them, download the font, unzip it, and refresh your font cache.
+(NerdFont will make it look much nicer and add allot of used symboles.)
 ```
 cd ~ # Ensure you are in your home directory
 mkdir -p .local/share/fonts 
@@ -21,7 +23,7 @@ cd .local/share/fonts
 ```
 
 
-#### 2. Install Nerd Fonts Hack to get symbols and nice look.
+#### 2. Install Nerd Fonts Hack.
 ```
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 unzip Hack.zip
@@ -29,7 +31,7 @@ fc-cache -fv
 ```
 
 
-#### 3. Git Clone and install Homelab
+#### 3. Git Clone and install Homelab.
 ```
 cd ~ # Ensure you are in your home directory before cloning
 git clone https://github.com/StianNOR/Homelab.git
@@ -51,9 +53,6 @@ sudo chmod +x *.sh
 ```
 ./uninstall_zsh_setup.sh
 ```
-
-
-
 
 > [!TIP]
 > Helpful advice for doing things better or more easily.
