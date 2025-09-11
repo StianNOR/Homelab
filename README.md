@@ -10,6 +10,17 @@
 | Pacman  | Arch Linux, Manjaro, EndeavourOS, Artix Linux, etc      |
 | Zypper  | openSUSE, SUSE, etc     |
 
+## Verifying Script Authenticity
+
+Each script is signed with a PGP key available on my [Keybase profile]([https://keybase.io/sarttech7]).  
+To verify a script before running, do:
+
+
+
+
+
+
+
 <br><br>
 #### 1. Download and Install Hack Nerd Font Manually. ✅
 These commands will create the font directories, download the font, unzip it, and refresh your font cache.
