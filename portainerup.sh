@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+
 # --- Colors and Formatting ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -20,7 +21,7 @@ if ! sudo -v; then
     exit 1
 fi
 
-# Keep-alive: update existing sudo time stamp until script is done
+# Keep-alive to update sudo timestamp until script finishes
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # --- Detect Distribution ---
@@ -83,17 +84,21 @@ install_docker() {
             exit 1
             ;;
     esac
-    # Add user to docker group if not already
+
+    # Fix potential permission issues on Docker config directory
+    sudo chown -R "$USER":"$USER" "$HOME/.docker" || true
+    sudo chmod -R g+rwx "$HOME/.docker" || true
+
+    # Add user to docker group if not already present
     if ! groups "$USER" | grep -qw docker; then
         sudo usermod -aG docker "$USER"
         warn "User '$USER' has been added to the 'docker' group."
         error "IMPORTANT: Docker group permissions will NOT be active in this current session."
-        error "Please LOG OUT completely and LOG BACK IN (or open a NEW SSH/terminal session)."
-        error "After re-logging in, please re-run this script: ./portainerup.sh"
-        exit 1 # Exit immediately, user must re-login and re-run
+        error "Please LOG OUT completely and LOG BACK IN (or reboot the machine) then re-run this script."
+        exit 1
     else
         success "User '$USER' is already in the 'docker' group."
-        info "Current user groups: $(groups "$USER")"
+        info "Current groups for user: $(groups "$USER")"
     fi
 }
 
@@ -101,7 +106,7 @@ install_docker() {
 step "Checking for Docker..."
 if ! command -v docker &>/dev/null; then
     warn "Docker not found. Starting installation..."
-    install_docker # This call will install Docker and potentially exit if user added to group
+    install_docker # Will install Docker and may exit if user added to group
 else
     success "Docker is already installed."
 fi
@@ -115,7 +120,7 @@ if ! docker info &>/dev/null; then
     error "Try running this command to refresh group membership in this terminal:"
     echo -e "${YELLOW}    newgrp docker${RESET}"
     error "Or LOG OUT completely and LOG BACK IN (or reboot the machine) then re-run this script."
-    exit 1 # Exit, user must re-login and re-run for permissions to apply
+    exit 1
 else
     success "Docker daemon is accessible with current user permissions."
 fi
