@@ -33,11 +33,11 @@ fc-cache -fv
 #### 3. Clone and Install Homelab. ✅
 <br><br>
 
-## Verifying Script Authenticity ⚠️ ⚠️ ⚠️
+## Verifying Script Authenticity ⚠️
 <br><br>
 #### Each script in this repository is digitally signed with my special security key managed on Keybase. This means you can check that the scripts really come from me and haven't been changed by anyone else.
 <br><br>
-### Clone and Prepare for Verification !!!
+### Clone and Prepare for Verification ⚠️
 
 ```
 cd ~ # Go to home directory, Can also check dir whit command: pwd
@@ -46,22 +46,22 @@ cd Homelab
 sudo chmod +x *.sh
 ```
 <br><br>
-### Import My Public Key
+### Import My Public Key ✅
 
 PGP public key fingerprint:  
 `52FE58C1C8BDA54D68E09C143E305BD749B795A3`
 
-To verify any script before running:
+To verify any script before running: ✅
 
 ###  Import my GPG public key:
 ```
 curl https://keybase.io/sarttech7/pgp_keys.asc | gpg --import
 ```
-### This imports my current PGP public key with fingerprint:
+### This imports my current PGP public key with fingerprint: ✅
 ```
 52FE 58C1 C8BD A54D 68E0 9C14 3E30 5BD7 49B7 95A3
 ```
-### Verifying Scripts:
+### Verifying Scripts: ✅
 ```
 gpg --verify signatures/setup_zsh.sh.asc setup_zsh.sh
 gpg --verify signatures/up.sh.asc up.sh
@@ -69,7 +69,7 @@ gpg --verify signatures/portainerup.sh.asc portainerup.sh
 gpg --verify signatures/portainer_docker_uninstall.sh.asc portainer_docker_uninstall.sh
 gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
 ```
-## You should see an output like:
+## You should see an output like: ✅
 ```
 Good signature from "StianNOR <stiannor@duck.com>"
 ```
@@ -89,23 +89,26 @@ trust
 y
 quit
 ```
-#### Note: Only mark keys you personally verify as ultimately trusted.
+#### Note: Only mark keys you personally verify as ultimately trusted. ⚠️
 
 > Why Trust Matters
-> The trust model in GPG prevents blindly trusting keys or signatures. My Keybase profile provides an additional identity assurance layer, but users must assign trust locally to verify authenticity fully.
+> The trust model in GPG prevents blindly trusting keys or signatures./
+> My Keybase profile provides an additional identity assurance layer,/
+> but users must assign trust locally to verify authenticity fully.
 
 
 
 <br><br>
-## After verifying you can go on whit installing:
+## After verifying you can go on whit installing: ✅
 
 ```
 ./setup_zsh.sh
 ```
-### Please reboot or relog to make changes. ⚠️
+### Please reboot or relog to make changes. ✅
 
 <br><br>
-#### 5. Install Portainer and Docker:
+#### 5. Install Portainer and Docker: ✅
+<br><br>
 ##### Now you should just type pup in terminal. Then follow prompts.
 ##### When prompted to reboot or relog do so, and also do `newgrp docker` if prompted.
 ##### Portainer and docker is ready if you get this msg:
@@ -149,9 +152,12 @@ ali
 > [!CAUTION]
 > Disclaimer ⚠️
 <br><br>
-
-`This script is provided as-is and is intended for use on supported Linux distributions.`\
-`While it has been tested on common distros, it may cause issues or break your system depending on your configuration.`\
-`Use at your own risk. It is strongly recommended to back up any important data before running this script.`\
-`The author is not responsible for any data loss, system damage, or other issues that may result from using this script.`\
-`If unsure, test in a safe environment like a virtual machine before using on your main system.`
+> This script is provided as-is and intended to be used on supported Linux distributions./
+> While it has been tested on common setups, it may not work perfectly on every system and could cause issues or damage depending on your configuration.
+<br><br>
+> Use it at your own risk. Please back up any important data before running these scripts. The author is not responsible for any loss or damage.
+<br><br>
+> If you're unsure, try running these scripts first in a safe environment such as a virtual machine.
+<br><br>
+> Important: This project is fully open and free for everyone to use. It is not designed for cheating, hacking, or any harmful purposes./
+> The code is shared in good faith for learning, improvement, and > community use.
