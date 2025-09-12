@@ -101,11 +101,11 @@ There is no indication that the signature belongs to the owner.
 ```
 gpg --edit-key 3E305BD749B795A3
 ```
-`Then type:
-trust
-Select option 5 (ultimate trust)
-y
-quit`
+`Then type:  
+trust  
+Select option 5 (ultimate trust)  
+y  
+quit`  
 
 > [!NOTE]
 > Only mark keys you personally verify as ultimately trusted. ⚠️
