@@ -31,6 +31,7 @@ cd .local/share/fonts
 ```
 wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
 unzip Hack.zip
+rm -rf Hack.zip
 fc-cache -fv
 ```
 
