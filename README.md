@@ -105,7 +105,9 @@ gpg --edit-key 3E305BD749B795A3
 `trust`    
 `Select option 5 (ultimate trust)`  
 `y`  
-`quit`    
+`quit`  
+
+<br><br>
 
 > [!NOTE]
 > Only mark keys you personally verify as ultimately trusted. ⚠️
