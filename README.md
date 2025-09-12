@@ -2,8 +2,8 @@
 <br><br>
 
 💡
-# Any issue please add here: https://github.com/StianNOR/Homelab/issues  
-# Or join my Discord: https://discord.gg/eHEHCzGCAE
+##### Any issue please add here: https://github.com/StianNOR/Homelab/issues  
+##### Or join my Discord: https://discord.gg/eHEHCzGCAE
 💡
 
 The script supports Linux distros using these package managers: ✅
