@@ -1,9 +1,10 @@
 ## Simplify and beautify your Linux terminal experience with this handy script. :sparkles:
 <br><br>
 
-### Any issue please add here: https://github.com/StianNOR/Homelab/issues  
-Or join my Discord: 
-
+💡
+# Any issue please add here: https://github.com/StianNOR/Homelab/issues  
+# Or join my Discord: https://discord.gg/eHEHCzGCAE
+💡
 
 The script supports Linux distros using these package managers: ✅
 <br><br>
