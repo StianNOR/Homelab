@@ -5,6 +5,7 @@
 > Any issue please add here: https://github.com/StianNOR/Homelab/issues  
 > Or join my Discord: https://discord.gg/eHEHCzGCAE
 
+<br><br>
 
 The script supports Linux distros using these package managers: ✅
 <br><br>
