@@ -59,7 +59,7 @@ gpg --verify signatures/font_nerd_hack.sh.asc font_nerd_hack.sh
 
 Expected output:  
 
-Good signature from "StianNOR stiannor@duck.com"
+`Good signature from "StianNOR stiannor@duck.com"`  
 
 
 
@@ -76,7 +76,7 @@ Good signature from "StianNOR stiannor@duck.com"
 > y
 > quit
 > ```  
-> Only assign ultimate trust to keys you have personally verified.
+> Only assign ultimate trust to keys you have personally verified.  
 
 ---
 
