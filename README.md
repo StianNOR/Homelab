@@ -53,7 +53,7 @@ gpg --verify signatures/up.sh.asc up.sh
 gpg --verify signatures/portainerup.sh.asc portainerup.sh
 gpg --verify signatures/portainer_docker_uninstall.sh.asc portainer_docker_uninstall.sh
 gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
-gpg --verify signatures/font_nerd_hack.sh.asc font_nerd_hack.sh
+gpg --verify signatures/font_nerd_hack.sh.sig font_nerd_hack.sh
 ```
 
 
