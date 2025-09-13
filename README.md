@@ -109,7 +109,8 @@ First install the fonts:
 ```
 Would also recommend to double check that fonts are set in system settings and in your terminal.
 reboot is usaly needed.
-
+<br><br>
+<br><br>
 Then next up is the main script:
 
 ```
