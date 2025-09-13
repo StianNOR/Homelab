@@ -18,28 +18,9 @@ The script supports Linux distros using these package managers: ✅
 | Zypper  | openSUSE, SUSE, etc     |
 
 <br><br>
-### 1. Download and Install Hack Nerd Font Manually. ✅
-These commands will create the font directories, download the font, unzip it, and refresh your font cache.
-Nerd Fonts add nice symbols for your terminal.
-```
-cd ~ # Go to home directory, Can also check dir whit command: pwd
-mkdir -p .local/share/fonts 
-cd .local/share/fonts
-```
-<br><br>
-### 2. Install Nerd Fonts Hack. ✅
-```
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
-unzip Hack.zip
-rm -rf Hack.zip
-fc-cache -fv
-```
-
-I recommand to go system settings and search for fonts, then adjust all fonts to Hack Nerd Font. Then apply. (If not showing restart.)
-
 <br><br>
 
-### 3. Clone Verify and Install Homelab. ✅
+### Clone Verify and Install Homelab. ✅
 
 <br><br>
 
@@ -85,6 +66,7 @@ gpg --verify signatures/up.sh.asc up.sh
 gpg --verify signatures/portainerup.sh.asc portainerup.sh
 gpg --verify signatures/portainer_docker_uninstall.sh.asc portainer_docker_uninstall.sh
 gpg --verify signatures/uninstall_zsh_setup.sh.asc uninstall_zsh_setup.sh
+gpg --verify signatures/font_nerd_hack.sh.asc font_nerd_hack.sh
 ```
 You should see an output like: ✅
 ```
@@ -121,6 +103,15 @@ gpg --edit-key 3E305BD749B795A3
 
 After verifying you can go on whit installing: ✅
 
+First install the fonts:
+```
+./font_nerd_hack.sh
+```
+Would also recommend to double check that fonts are set in system settings and in your terminal.
+reboot is usaly needed.
+
+Then next up is the main script:
+
 ```
 ./setup_zsh.sh
 ```
@@ -139,7 +130,7 @@ Portainer and docker is ready if you get this msg:
 
 <br><br>
 
-### 5. Uninstall (Uninstall scripts are located in /home/$USER/Homelab.) 😦
+### Uninstall (Uninstall scripts are located in /home/$USER/Homelab.) 😦
 To remove Portainer and Docker, run: 😭
 ```
 ./portainer_docker_uninstall.sh
