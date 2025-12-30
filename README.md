@@ -175,5 +175,5 @@ While tested on common setups, it may not work for all configurations.
 
 | Before | After |
 | :---: | :---: |
-| ![Before Image](link_to_before_image) | ![After Image](link_to_after_image) |
+| ![Before Image](<Standard Terminal.png>) | ![After Image](<ZSH StianNOR install.png>) |
 
