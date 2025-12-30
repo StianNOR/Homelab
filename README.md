@@ -173,3 +173,7 @@ While tested on common setups, it may not work for all configurations.
 - This project is fully open and free to use, intended only for educational and community purposes — never for harmful activities.  
 
 
+| Before | After |
+| :---: | :---: |
+| ![Before Image](link_to_before_image) | ![After Image](link_to_after_image) |
+
