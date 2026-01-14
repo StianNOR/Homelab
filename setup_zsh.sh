@@ -17,13 +17,7 @@ warn()    { echo -e "${YELLOW}⚠️  $*${RESET}"; }
 error()   { echo -e "${RED}❌ $*${RESET}"; }
 step()    { echo -e "${BOLD}${BLUE}➤ $*${RESET}"; }
 
-# --- Global error trap for fail-safe ---
-trap '{
-  error "Script failed at line $LINENO. Last command: $BASH_COMMAND"
-  warn "Try running the failed command manually, or check your package manager and sudo configuration."
-  warn "If on Arch/Manjaro, check pacman locks and mirrors. If on Ubuntu/Debian, check apt sources and network."
-  exit 1
-}' ERR
+trap 'error "Script failed at line $LINENO"; exit 1' ERR
 
 # ----- 1. Detect package manager -----
 step "Detecting package manager..."
@@ -31,227 +25,160 @@ if command -v apt >/dev/null 2>&1; then
     PM="apt"
     UPDATE="sudo apt update"
     INSTALL="sudo apt install -y"
-    CLEAN="sudo apt clean"
-    AUTOREMOVE="sudo apt autoremove -y"
-elif command -v dnf >/dev/null 2>&1; then
-    PM="dnf"
-    UPDATE="sudo dnf check-update || true"
-    INSTALL="sudo dnf install -y"
-    CLEAN="sudo dnf clean all"
-    AUTOREMOVE="sudo dnf autoremove -y"
-elif command -v yum >/dev/null 2>&1; then
-    PM="yum"
-    UPDATE="sudo yum check-update || true"
-    INSTALL="sudo yum install -y"
-    CLEAN="sudo yum clean all"
-    AUTOREMOVE="sudo yum autoremove -y"
 elif command -v pacman >/dev/null 2>&1; then
     PM="pacman"
     UPDATE="sudo pacman -Syu --noconfirm"
     INSTALL="sudo pacman -S --noconfirm"
-    CLEAN="sudo pacman -Sc --noconfirm"
-    ORPHANS="$(pacman -Qtdq 2>/dev/null || true)"
-    if [[ -n "$ORPHANS" ]]; then
-        AUTOREMOVE="sudo pacman -Rns $ORPHANS --noconfirm"
-    else
-        AUTOREMOVE="echo 'No orphaned packages to remove.'"
-    fi
-elif command -v zypper >/dev/null 2>&1; then
-    PM="zypper"
-    UPDATE="sudo zypper refresh"
-    INSTALL="sudo zypper install -y"
-    CLEAN="sudo zypper clean"
-    AUTOREMOVE="sudo zypper rm -u"
 else
-    error "No supported package manager found."
+    error "Only apt/pacman supported"
     exit 1
 fi
-success "Detected package manager: $PM"
+success "Detected: $PM"
 
-# ----- 2. Install zsh if missing -----
-step "Ensuring zsh is installed..."
-if ! command -v zsh >/dev/null 2>&1; then
-    info "zsh not found, installing..."
-    if ! $INSTALL zsh; then
-        error "Failed to install zsh."
-        exit 1
-    fi
-    success "zsh installed."
-else
-    success "zsh is already installed."
-fi
+# ----- 2. Install packages -----
+step "Installing zsh and tools via $PM..."
+$UPDATE
+$INSTALL zsh git curl fastfetch  # remove distro plugin pkgs; OMZ will use git clones
+success "Core packages installed."
 
-# ----- 3. Install dependencies -----
-step "Updating package lists and installing dependencies..."
-if ! $UPDATE; then
-  error "Package manager update failed. Check your network, mirrors, and sudo permissions."
-  exit 1
-fi
-success "Package manager updated."
-
-if [[ "$PM" == "pacman" ]]; then
-    if ! $INSTALL curl git ruby gcc make; then
-      error "Dependency install failed. Check pacman output."
-      exit 1
-    fi
-else
-    if ! $INSTALL curl git ruby ruby-devel gcc make && ! $INSTALL ruby ruby-dev gcc make; then
-      error "Dependency install failed. Check package manager output."
-      exit 1
-    fi
-fi
-success "Dependencies installed."
-
-# ----- 4. Update RubyGems and all gems -----
-step "Updating RubyGems and all installed gems..."
-if [[ "$PM" == "apt" ]]; then
-    warn "RubyGems system update is disabled on Debian/Ubuntu. Use apt to update rubygems if needed."
-else
-    if gem update --system; then
-        success "RubyGems system updated."
-    else
-        warn "RubyGems system update failed or is not supported on this distribution."
-    fi
-fi
-
-if gem update; then
-    success "All installed gems updated."
-else
-    warn "Gem update failed. Some gems may not have been updated."
-fi
-
-# ----- 5. Install colorls (user install, not sudo) -----
-step "Checking for colorls Ruby gem..."
-export GEM_HOME="$HOME/.gem"
-export PATH="$PATH:$GEM_HOME/bin"
-
-if ! gem list -i colorls >/dev/null 2>&1; then
-    info "Installing colorls Ruby gem for your user..."
-    if ! gem install --user-install colorls; then
-      error "colorls install failed. Check Ruby/gem output."
-      exit 1
-    fi
-    success "colorls installed."
-else
-    success "colorls is already installed."
-fi
-
-USER_GEM_BIN="$(ruby -e 'puts Gem.user_dir')/bin"
-if ! grep -q "$USER_GEM_BIN" "$HOME/.zshrc"; then
-  echo "export PATH=\"\$PATH:$USER_GEM_BIN\"" >> "$HOME/.zshrc"
-  info "Added $USER_GEM_BIN to your PATH in .zshrc"
-fi
-
-if ! command -v colorls >/dev/null 2>&1; then
-    warn "colorls binary not found in PATH. You may need to restart your shell or source your .zshrc."
-fi
-
-# ----- 6. Install fastfetch -----
-step "Checking for fastfetch..."
-if ! command -v fastfetch >/dev/null 2>&1; then
-    info "fastfetch not found in PATH. Trying to install via package manager..."
-    if $INSTALL fastfetch; then
-        success "fastfetch installed via package manager."
-    else
-        warn "Fastfetch package install failed or not available in your repo."
-        echo -e "${YELLOW}Please install fastfetch manually and then re-run this script.${RESET}"
-        exit 1
-    fi
-else
-    success "fastfetch is already installed."
-fi
-
-# ----- 7. Install Oh My Zsh -----
-step "Checking for Oh My Zsh..."
+# ----- 3. Install Oh My Zsh -----
+step "Installing Oh My Zsh..."
 if [ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]; then
-    info "Installing Oh My Zsh..."
     rm -rf "$HOME/.oh-my-zsh"
-    if ! RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; then
-      error "Oh My Zsh install failed."
-      exit 1
-    fi
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     success "Oh My Zsh installed."
 else
-    success "Oh My Zsh is already installed."
+    success "Oh My Zsh exists."
 fi
 
+# ensure ZSH_CUSTOM is set
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
-# ----- 8. Install Powerlevel10k theme -----
-step "Checking for Powerlevel10k theme..."
+# ----- 4. Install Powerlevel10k -----
+step "Installing Powerlevel10k..."
 if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
-    info "Installing Powerlevel10k theme..."
-    if ! git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"; then
-      error "Powerlevel10k install failed."
-      exit 1
-    fi
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
+        "$ZSH_CUSTOM/themes/powerlevel10k"
     success "Powerlevel10k installed."
 else
-    success "Powerlevel10k theme is already installed."
+    success "Powerlevel10k already present."
 fi
 
-# ----- 9. Install plugins -----
-step "Checking for Zsh plugins..."
-declare -A plugins
-plugins=(
-  [zsh-autosuggestions]="https://github.com/zsh-users/zsh-autosuggestions"
-  [zsh-syntax-highlighting]="https://github.com/zsh-users/zsh-syntax-highlighting"
-  [zsh-completions]="https://github.com/zsh-users/zsh-completions"
-)
+# ----- 5. Install OMZ plugins properly -----
+step "Installing zsh-autosuggestions and zsh-syntax-highlighting..."
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git \
+        "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+fi
 
-for plugin in "${!plugins[@]}"; do
-  if [ ! -d "$ZSH_CUSTOM/plugins/$plugin" ]; then
-    info "Installing plugin: $plugin"
-    if ! git clone "${plugins[$plugin]}" "$ZSH_CUSTOM/plugins/$plugin"; then
-      error "Plugin $plugin install failed."
-      exit 1
-    fi
-    success "Plugin $plugin installed."
-  else
-    success "Plugin $plugin is already installed."
-  fi
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
+        "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+fi
+success "Oh My Zsh plugins installed."
+
+# ----- 6. Install colorls -----
+step "Installing colorls..."
+export GEM_HOME="$HOME/.gem"
+export PATH="$PATH:$GEM_HOME/bin"
+if ! gem list -i colorls >/dev/null 2>&1; then
+    gem install --user-install colorls
+    success "colorls installed."
+else
+    success "colorls already installed."
+fi
+
+# ----- 7. YOUR .zshrc (plugins BEFORE source) -----
+step "Installing YOUR exact .zshrc..."
+cat > "$HOME/.zshrc" << 'EOF'
+# ─── Ensure Ruby Gem Binaries Are in PATH ──────────────────────────────
+setopt nullglob
+for dir in "$HOME/.gem/ruby/"*/bin ; do
+  [[ -d $dir ]] && PATH="$PATH:$dir"
 done
+export PATH
 
-# ----- 10. Copy .zshrc and .p10k.zsh from repo with error checking -----
-step "Copying .zshrc and .p10k.zsh from repo..."
-SCRIPT_DIR="$HOME/Homelab"
-REPO_ZSHRC="$SCRIPT_DIR/.zshrc"
-DEST_ZSHRC="$HOME/.zshrc"
-REPO_P10K="$SCRIPT_DIR/.p10k.zsh"
-DEST_P10K="$HOME/.p10k.zsh"
-
-if [ -f "$REPO_ZSHRC" ]; then
-  cp "$REPO_ZSHRC" "$DEST_ZSHRC"
-  success ".zshrc copied to $DEST_ZSHRC"
-else
-  warn "$REPO_ZSHRC not found. .zshrc was NOT copied."
-  ls -l "$SCRIPT_DIR"
-fi
-
-if [ -f "$REPO_P10K" ]; then
-  cp "$REPO_P10K" "$DEST_P10K"
-  success ".p10k.zsh copied to $DEST_P10K"
-else
-  warn "No .p10k.zsh found in $SCRIPT_DIR. Skipping."
-fi
-
-# ----- 11. Change default shell to zsh if not already -----
-step "Checking default shell..."
-if [ "$SHELL" != "$(which zsh)" ]; then
-  if chsh -s "$(which zsh)"; then
-    info "Default shell changed to zsh. Please log out and log in again for changes to take effect."
+#Root
+sudo() {
+  if [[ "$1" == "nano" ]]; then
+    TERM=xterm command sudo nano "${@:2}"
   else
-    warn "Could not change default shell. You may need to do it manually."
+    command sudo "$@"
   fi
-else
-  success "zsh is already the default shell."
+}
+
+# ─── Powerlevel10k Instant Prompt ───────
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+autoload -Uz compinit
+compinit
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-echo -e "${GREEN}${BOLD}
-🎉 All Zsh plugins, Powerlevel10k, colorls, fastfetch, and up.sh are installed and configured! 🎉
-${RESET}"
+# ─── Oh My Zsh and Theme Setup ────────────────────────────────────────
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-echo -e "${CYAN}The up.sh script is now located in: ~/Homelab/up.sh${RESET}"
-echo -e "${CYAN}Refreshing your shell in 3 seconds...${RESET}"
-sleep 3
+# ─── Plugins (NO zsh-completions) ──────────────────────────────────────
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# load Oh My Zsh AFTER defining plugins
+source $ZSH/oh-my-zsh.sh
+
+# ─── FIX 1: Make autosuggestions VISIBLE ───────────────────────────
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=cyan,bold'
+
+# ─── Aliases: Use colorls If Available ────────────────
+if command -v colorls >/dev/null 2>&1; then
+  alias ls='colorls -d'
+  alias ll='colorls -l'
+  alias la='colorls -a'
+  alias sls='colorls'
+else
+  alias ls='ls --color=auto'
+  alias ll='ls -l --color=auto'
+  alias la='ls -a --color=auto'
+  alias sls='ls'
+fi
+
+# ─── User Aliases ───────────────────────────────────────
+alias up="/home/$USER/Homelab/up.sh"
+alias pup="/home/$USER/Homelab/portainerup.sh"
+alias p10="p10k configure"
+alias fresh='source ~/.zshrc'
+alias clear='clear && source ~/.zshrc'
+alias portainerup='bash /home/$USER/Homelab/portainerup.sh'
+alias nano='TERM=xterm nano'
+alias ali='grep '^alias' ~/.zshrc'
+
+# ─── Welcome Message ──────────────────────────────
+echo "┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐"
+echo "|                                                \x1b[32mWelcome Back My Master\x1b[0m                                                         |"
+echo "└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘"
+echo ""
+fastfetch
+echo ""
+echo "┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐"
+echo "|                                                 \x1b[32mEnjoy, here is your HomeDir\x1b[0m                                                   |"
+echo "└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘"
+echo " ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── "
+sls
+echo " ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── "
+
+export EDITOR="nano"
+export VISUAL="nano"
+
+[[ -f /home/stiannor/.dart-cli-completion/zsh-config.zsh ]] && . /home/stiannor/.dart-cli-completion/zsh-config.zsh || true
+EOF
+
+success "YOUR .zshrc installed with cyan autosuggestions!"
+
+# ----- 8. Set zsh default -----
+if [ "$SHELL" != "$(which zsh)" ]; then
+    chsh -s "$(which zsh)"
+    info "Set zsh as default shell. Log out/in."
+fi
+
+echo -e "${GREEN}${BOLD}🎉 DONE! Cyan autosuggestions work NOW.${RESET}"
 exec zsh
